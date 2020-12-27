@@ -1,70 +1,69 @@
 import yaml
-from dataclasses import dataclass
+from AW import AW
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication
+import sys
+import AW_GUI
 
 
-@dataclass
-class AW:
-    msr: dict
-    et: dict
-    pls: dict
-    faktor: dict
+class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_MainWindow):
 
-    def getMSRfaktor(self, *args):
-        if args[0] == "vor Ort":
-            return self.msr[args[0]][args[1]][args[3]]
-        elif args[0] == "Leitstand":
-            firstkey = self.msr[args[0]][1].keys()
-            for i in firstkey:
-                if args[1][0] in i:
-                    firstkey = i
-                    break
-            if len(args[2]) > 0:
-                secondkey = self.msr[args[0]][2].keys()
-                for i in secondkey:
-                    if args[2] in i and len(args[2]) > 0:
-                        secondkey = i
-                        return self.msr[args[0]][1][firstkey][args[3]] + self.msr[args[0]][2][secondkey][args[3]]
-            else:
-                return self.msr[args[0]][1][firstkey][args[3]]
-        elif args[0] == "weitere":
-            return self.msr[args[0]][args[1]][args[3]]
+    def __init__(self, parent=None):
+        super(ExampleApp, self).__init__(parent)
+        #Initalisierung der Data class
+        self.data = self.getDatafromYaml()
+        # GUI Funktionen Initalisieren
+        self.setupUi(self)
+        self.comboBox_bereich.addItems(["", "msr", "pls", "et"])
+        self.comboBox_bereich.currentIndexChanged.connect(self.auswahl_cbbereich)
+        self.comboBox_position.currentIndexChanged.connect(self.auswahl_cb3)
+        self.comboBox_bezeichner1.setVisible(False)
+        self.label_bezeichner1.setVisible(False)
+        self.comboBox_bezeichner2.setVisible(False)
+        self.label_bezeichner2.setVisible(False)
+        self.comboBox_position.setVisible(False)
+        self.label_position.setVisible(False)
 
-    def getETfaktor(self, *args):
-        return self.et[int(args[0])][args[1]]
+    def getDatafromYaml(self):
+        with open('Verrechnung.yaml', 'r') as f:
+            data = yaml.load(f)
+            test = AW(
+                data["Verrechnung"]["MSR"], data["Verrechnung"]["ET"], data["Verrechnung"]["PLS"],
+                data["Verrechnung"]["Mehrung"]
+                )
+            return test
 
-    def getPLSfaktor(self, *args):
-        return self.pls[args[0]][args[1]]["AW"]
+    def auswahl_cbbereich(self):
+        self.comboBox_position.setVisible(True)
+        self.label_position.setVisible(True)
+        if self.comboBox_bereich.currentText() == "msr":
+            self.comboBox_position.clear()
+            self.comboBox_position.addItems(self.data.getMSRkeys())
+        elif self.comboBox_bereich.currentText() == "et":
+            self.comboBox_position.clear()
+            trylist = []
+            for i in self.data.getETkeys():
+                trylist.append(str(i) + ": " + self.data.getETinfo(i))
+            self.comboBox_position.addItems(trylist)
+        elif self.comboBox_bereich.currentText() == "pls":
+            self.comboBox_position.clear()
+            self.comboBox_position.addItems(self.data.getPLSkeys())
+        else:
+            self.comboBox_position.clear()
+            self.comboBox_position.setVisible(False)
+            self.label_position.setVisible(False)
 
-    def getETinfo(self, *args):
-        return self.et[int(args[0])]["info"]
-
-    def getETbemerkung(self, *args):
-        return self.et[int(args[0])]["bemerkung"]
-
-    def getPLSinfo(self, *args):
-        return self.pls[args[0]][args[1]]["info"]
-
-    def getMSRkeys(self):
-        return self.msr.keys()
-
-    def getETkeys(self):
-        return self.et.keys()
-
-    def getPLSkeys(self):
-        return self.pls.keys()
-
-    def getFaktorkeys(self):
-        return self.faktor.keys()
+    def auswahl_cb3(self):
+        pass
+        #print(self.data.getMSRfunktion(self.comboBox_3.currentText()))
 
 
-def getDatafromYaml():
-    with open('Verrechnung.yaml', 'r') as f:
-        data = yaml.load(f)
-        test = AW(
-            data["Verrechnung"]["MSR"], data["Verrechnung"]["ET"], data["Verrechnung"]["PLS"],
-            data["Verrechnung"]["Mehrung"]
-            )
+def main():
+    app = QApplication(sys.argv)
+    form = ExampleApp()
+    form.show()
+    app.exec_()
 
 
 if __name__ == "__main__":
-    getDatafromYaml()
+    main()
