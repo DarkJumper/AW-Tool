@@ -6,56 +6,150 @@ import sys
 import AW_GUI
 
 
-class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_MainWindow):
+class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
+    # Initalisierung Programm (GUI)
     def __init__(self, parent=None):
         super(ExampleApp, self).__init__(parent)
         #Initalisierung der Data class
-        self.data = self.getDatafromYaml()
+        with open('Verrechnung.yaml', 'r') as f:
+            data = yaml.load(f)
+            self.data = AW(
+                data["Verrechnung"]["MSR"], data["Verrechnung"]["ET"], data["Verrechnung"]["PLS"],
+                data["Verrechnung"]["Mehrung"]
+                )
+        self.leer = ["---"]
+        # Berechnungen für Listen.
+        self.PLSkeys = self.data.getPLSkeys()
+        self.MSRkeys = self.data.getMSRkeys()
+        self.ETkeys = []
+        self.ETinfo = []
+        for key in self.data.getETkeys():
+            self.ETkeys.append(str(key))
+            self.ETinfo.append(self.data.getETinfo(key))
+        self.ETkeys = self.leer + self.ETkeys
+        self.ETinfo = self.leer + self.ETinfo
+        menge = []
+        for i in range(1, 50):
+            menge.append(str(i))
         # GUI Funktionen Initalisieren
         self.setupUi(self)
-        self.comboBox_bereich.addItems(["", "msr", "pls", "et"])
+        # Standart Anzeige
+        self.comboBox_bereich_2.addItems(menge)
+        self.comboBox_bereich.addItems(["---", "msr", "pls", "et"])
         self.comboBox_bereich.currentIndexChanged.connect(self.auswahl_cbbereich)
-        self.comboBox_position.currentIndexChanged.connect(self.auswahl_cb3)
+        self.comboBox_position.currentIndexChanged.connect(self.auswahl_cbposition)
+        self.comboBox_bezeichner1.currentIndexChanged.connect(self.auswahl_cbbezeichner1)
+        self.comboBox_bezeichner2.currentIndexChanged.connect(self.auswahl_cbbezeichner2)
         self.comboBox_bezeichner1.setVisible(False)
         self.label_bezeichner1.setVisible(False)
         self.comboBox_bezeichner2.setVisible(False)
         self.label_bezeichner2.setVisible(False)
         self.comboBox_position.setVisible(False)
         self.label_position.setVisible(False)
+        self.label.setVisible(False)
+        self.textBrowser.setVisible(False)
 
-    def getDatafromYaml(self):
-        with open('Verrechnung.yaml', 'r') as f:
-            data = yaml.load(f)
-            test = AW(
-                data["Verrechnung"]["MSR"], data["Verrechnung"]["ET"], data["Verrechnung"]["PLS"],
-                data["Verrechnung"]["Mehrung"]
-                )
-            return test
-
+    # Auswahl des Abrechnungsbereiches
     def auswahl_cbbereich(self):
         self.comboBox_position.setVisible(True)
         self.label_position.setVisible(True)
         if self.comboBox_bereich.currentText() == "msr":
             self.comboBox_position.clear()
-            self.comboBox_position.addItems(self.data.getMSRkeys())
+            self.comboBox_position.addItems(self.leer + self.MSRkeys)
+            self.comboBox_position.setCurrentIndex(0)
+            self.comboBox_bezeichner1.setVisible(False)
+            self.label_bezeichner1.setVisible(False)
+            self.comboBox_bezeichner1.clear()
+            self.comboBox_bezeichner2.setVisible(False)
+            self.label_bezeichner2.setVisible(False)
+            self.comboBox_bezeichner2.clear()
         elif self.comboBox_bereich.currentText() == "et":
             self.comboBox_position.clear()
-            trylist = []
-            for i in self.data.getETkeys():
-                trylist.append(str(i) + ": " + self.data.getETinfo(i))
-            self.comboBox_position.addItems(trylist)
+            self.comboBox_position.addItems(self.ETkeys)
+            self.comboBox_position.setCurrentIndex(0)
+            self.comboBox_bezeichner1.setVisible(True)
+            self.label_bezeichner1.setVisible(True)
+            self.label_bezeichner1.setText("information: ")
+            self.comboBox_bezeichner1.addItems(self.ETinfo)
         elif self.comboBox_bereich.currentText() == "pls":
             self.comboBox_position.clear()
-            self.comboBox_position.addItems(self.data.getPLSkeys())
+            self.comboBox_position.addItems(self.leer + self.PLSkeys)
+            self.comboBox_position.setCurrentIndex(0)
+            self.comboBox_bezeichner1.setVisible(False)
+            self.label_bezeichner1.setVisible(False)
+            self.comboBox_bezeichner1.clear()
+            self.comboBox_bezeichner2.setVisible(False)
+            self.label_bezeichner2.setVisible(False)
+            self.comboBox_bezeichner2.clear()
         else:
             self.comboBox_position.clear()
             self.comboBox_position.setVisible(False)
             self.label_position.setVisible(False)
+            self.comboBox_bezeichner1.setVisible(False)
+            self.label_bezeichner1.setVisible(False)
+            self.comboBox_bezeichner1.clear()
+            self.comboBox_bezeichner2.setVisible(False)
+            self.label_bezeichner2.setVisible(False)
+            self.comboBox_bezeichner2.clear()
 
-    def auswahl_cb3(self):
+    # Auswahl der Positionen im bereich
+    def auswahl_cbposition(self):
+        text_cb = self.comboBox_position.currentText()
+        if text_cb in self.MSRkeys:
+            first, second = self.data.getMSRposition(text_cb)
+            if text_cb == "vor Ort":
+                self.comboBox_bezeichner1.clear()
+                self.comboBox_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setText("Auswahl: ")
+                self.comboBox_bezeichner1.addItems(self.leer + first)
+            elif text_cb == "Leitstand":
+                self.comboBox_bezeichner1.clear()
+                self.comboBox_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setText("Erstestelle: ")
+                self.comboBox_bezeichner1.addItems(self.leer + first)
+                self.comboBox_bezeichner2.clear()
+                self.comboBox_bezeichner2.setVisible(True)
+                self.label_bezeichner2.setVisible(True)
+                self.label_bezeichner2.setText("Zweitestelle: ")
+                self.comboBox_bezeichner2.addItems(self.leer + second)
+            elif text_cb == "weitere":
+                self.comboBox_bezeichner1.clear()
+                self.comboBox_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setVisible(True)
+                self.label_bezeichner1.setText("Auswahl: ")
+                self.comboBox_bezeichner1.addItems(self.leer + first)
+            else:
+                self.comboBox_bezeichner1.setVisible(False)
+                self.label_bezeichner1.setVisible(False)
+                self.comboBox_bezeichner2.setVisible(False)
+                self.label_bezeichner2.setVisible(False)
+        if text_cb in self.ETkeys:
+            try:
+                item = int(self.comboBox_position.currentText())
+                self.comboBox_bezeichner1.setCurrentIndex(item)
+            except ValueError:
+                pass
+        if text_cb in self.PLSkeys:
+            pls_txt = self.data.getPLSposition(text_cb)
+            self.comboBox_bezeichner1.clear()
+            self.comboBox_bezeichner1.setVisible(True)
+            self.label_bezeichner1.setVisible(True)
+            self.label_bezeichner1.setText("Auswahl: ")
+            self.comboBox_bezeichner1.addItems(self.leer + pls_txt)
+
+    def auswahl_cbbezeichner1(self):
+        if self.comboBox_position.currentText() in self.ETkeys:
+            try:
+                item = self.comboBox_bezeichner1.currentIndex()
+                self.comboBox_position.setCurrentIndex(item)
+            except ValueError:
+                pass
+
+    def auswahl_cbbezeichner2(self):
         pass
-        #print(self.data.getMSRfunktion(self.comboBox_3.currentText()))
 
 
 def main():

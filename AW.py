@@ -44,16 +44,24 @@ class AW:
         return self.pls[args[0]][args[1]]["info"]
 
     def getMSRkeys(self):
-        return self.msr.keys()
+        return list(self.msr.keys())
 
     def getETkeys(self):
         return self.et.keys()
 
     def getPLSkeys(self):
-        return self.pls.keys()
+        return list(self.pls.keys())
 
     def getFaktorkeys(self):
         return self.faktor.keys()
 
-    def getMSRfunktion(self, *args):
-        return self.msr[args[0]].keys()
+    def getMSRposition(self, *args):
+        if args[0] == "vor Ort" or args[0] == "weitere":
+            return list(self.msr[args[0]].keys()), None
+        elif args[0] == "Leitstand":
+            return list(self.msr[args[0]][1].keys()), list(self.msr[args[0]][2].keys())
+        else:
+            return None, None
+
+    def getPLSposition(self, *args):
+        return list(self.pls[args[0]].keys())

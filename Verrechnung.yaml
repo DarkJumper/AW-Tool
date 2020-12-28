@@ -395,16 +395,16 @@ Verrechnung:
         info: "hinzufügen je Logikelement"
         AW: 0.4
     Grafiken:
-      10:
+      10 Elemente:
         info: "Bild bis zu 10 dynamische Feldern"
         AW: 7
-      20:
+      20 Elemente:
         info: "Bild bis zu 20 dynamische Feldern"
         AW: 8.3
-      30:
+      30 Elemente:
         info: "Bild bis zu 30 dynamische Feldern"
         AW: 9.5
-      40:
+      40 Elemente:
         info: "Bild bis zu 40 dynamische Fedlern"
         AW: 14
       gruppen:
