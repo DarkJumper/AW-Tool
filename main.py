@@ -30,7 +30,7 @@ class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.ETkeys = self.leer + self.ETkeys
         self.ETinfo = self.leer + self.ETinfo
         menge = []
-        for i in range(1, 50):
+        for i in range(1, 100):
             menge.append(str(i))
         # GUI Funktionen Initalisieren
         self.setupUi(self)
@@ -40,7 +40,10 @@ class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.comboBox_bereich.currentIndexChanged.connect(self.auswahl_cbbereich)
         self.comboBox_position.currentIndexChanged.connect(self.auswahl_cbposition)
         self.comboBox_bezeichner1.currentIndexChanged.connect(self.auswahl_cbbezeichner1)
-        self.comboBox_bezeichner2.currentIndexChanged.connect(self.auswahl_cbbezeichner2)
+        self.pushButton_hinzufgen.clicked.connect(lambda: self.push_hinzufügen())
+        self.pushButton_loeschen.clicked.connect(lambda: self.push_löschen())
+        self.pushButton_erstellen.clicked.connect(lambda: self.push_erstellen())
+        self.pushButton_beenden.clicked.connect(lambda: self.exec_())
         self.comboBox_bezeichner1.setVisible(False)
         self.label_bezeichner1.setVisible(False)
         self.comboBox_bezeichner2.setVisible(False)
@@ -68,6 +71,10 @@ class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.comboBox_position.clear()
             self.comboBox_position.addItems(self.ETkeys)
             self.comboBox_position.setCurrentIndex(0)
+            self.comboBox_bezeichner1.clear()
+            self.comboBox_bezeichner2.setVisible(False)
+            self.label_bezeichner2.setVisible(False)
+            self.comboBox_bezeichner2.clear()
             self.comboBox_bezeichner1.setVisible(True)
             self.label_bezeichner1.setVisible(True)
             self.label_bezeichner1.setText("information: ")
@@ -92,6 +99,8 @@ class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.comboBox_bezeichner2.setVisible(False)
             self.label_bezeichner2.setVisible(False)
             self.comboBox_bezeichner2.clear()
+            self.label.setVisible(False)
+            self.textBrowser.setVisible(False)
 
     # Auswahl der Positionen im bereich
     def auswahl_cbposition(self):
@@ -126,30 +135,48 @@ class ExampleApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
                 self.label_bezeichner1.setVisible(False)
                 self.comboBox_bezeichner2.setVisible(False)
                 self.label_bezeichner2.setVisible(False)
-        if text_cb in self.ETkeys:
+        elif text_cb in self.ETkeys:
             try:
                 item = int(self.comboBox_position.currentText())
                 self.comboBox_bezeichner1.setCurrentIndex(item)
+                self.label.setVisible(True)
+                self.textBrowser.setVisible(True)
+                self.textBrowser.setText(self.data.getETbemerkung(item))
             except ValueError:
                 pass
-        if text_cb in self.PLSkeys:
+        elif text_cb in self.PLSkeys:
             pls_txt = self.data.getPLSposition(text_cb)
             self.comboBox_bezeichner1.clear()
             self.comboBox_bezeichner1.setVisible(True)
             self.label_bezeichner1.setVisible(True)
             self.label_bezeichner1.setText("Auswahl: ")
             self.comboBox_bezeichner1.addItems(self.leer + pls_txt)
+        else:
+            self.label.setVisible(False)
+            self.textBrowser.setVisible(False)
 
     def auswahl_cbbezeichner1(self):
-        if self.comboBox_position.currentText() in self.ETkeys:
+        text_cb = self.comboBox_position.currentText()
+        text_cb1 = self.comboBox_bezeichner1.currentText()
+        if text_cb in self.ETkeys:
             try:
                 item = self.comboBox_bezeichner1.currentIndex()
                 self.comboBox_position.setCurrentIndex(item)
             except ValueError:
                 pass
+        elif text_cb in self.PLSkeys and text_cb1 in self.data.getPLSposition(text_cb):
+            self.label.setVisible(True)
+            self.textBrowser.setVisible(True)
+            self.textBrowser.setText(self.data.getPLSinfo(text_cb, text_cb1))
 
-    def auswahl_cbbezeichner2(self):
-        pass
+    def push_hinzufügen(self):
+        print("hinz")
+
+    def push_löschen(self):
+        print("delete")
+
+    def push_erstellen(self):
+        print("prot")
 
 
 def main():
