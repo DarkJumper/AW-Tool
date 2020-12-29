@@ -53,7 +53,7 @@ class AW:
         return list(self.pls.keys())
 
     def getFaktorkeys(self):
-        return self.faktor.keys()
+        return self.faktor
 
     def getMSRposition(self, *args):
         if args[0] == "vor Ort" or args[0] == "weitere":

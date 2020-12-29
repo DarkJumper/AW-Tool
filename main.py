@@ -1,14 +1,14 @@
 import yaml
 from AW import AW
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem
 import sys
 import AW_GUI
 
 
 class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     # Standart Variablen im GUI
-    __version = "Beta 1.0"
+    __version = "Beta 0.1"
     _bereich = ["---", "msr", "pls", "et"]
     _leistung = ["basic", "detail", "montage", "material"]
     _msr_header = [
@@ -52,6 +52,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.combobox_bezeichner1(False, "", *self.leer)
         self.combobox_bezeichner2(False, "", *self.leer)
         self.textbox_bemerkung(False, "", "")
+        self.label_ew(True, 0.0, 0.0)
         # Funktionen zuweisen.
         self.comboBox_bereich.addItems(self._bereich)
         self.comboBox_bereich.currentIndexChanged.connect(self.auswahl_cbbereich)
@@ -116,6 +117,13 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.label.setText(txt)
         self.label.setVisible(vis)
 
+    # Summe Berechnen
+    def label_ew(self, vis, faktor, wert):
+        self.label_sum.setVisible(vis)
+        self.label_sum.setText("%.2f €" % (wert))
+        self.label_faktor.setVisible(vis)
+        self.label_faktor.setText("mit Verrechnet : %.1f " % (faktor))
+
 
 # Events der Button und Comboboxen etc.
 # Auswahl des Abrechnungsbereiches
@@ -156,8 +164,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         text_cb = self.comboBox_position.currentText()
         first, second = self.data.getMSRposition(self.comboBox_position.currentText())
         if text_cb in self.MSRkeys:
-            self.combobox_menge(False, "Menge", *self.menge)
-            self.combobox_leistung(False, "Leistung", *self._leistung)
+            self.combobox_menge(True, "Menge", *self.menge)
+            self.combobox_leistung(True, "Leistung", *self._leistung)
             if text_cb == "vor Ort":
                 self.combobox_bezeichner1(True, "Auswahl:", *first)
                 self.combobox_bezeichner2(False, "", *self.leer)
@@ -202,27 +210,75 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
     # Nach größe der Liste wird das Table Widget angepasst
     def defineTableWidget(self, list=[]):
-        self.tableWidget.setRowCount(100)
+        self.tableWidget.setRowCount(1)
         self.tableWidget.setColumnCount(len(list))
         self.tableWidget.setHorizontalHeaderLabels(list)
 
+    # daten in Tabelle eintragen
     def setTabeleWidget(self):
         if self.comboBox_bereich.currentText() == "---":
             pass
         elif self.comboBox_bereich.currentText() == "msr":
-            print("msr")
+            self.label_ew(False, 0.0, 0.0)
+            self.set_table_cells()
+            faktor, summe = self.calc_sum(7)
+            self.label_ew(True, faktor, summe)
         elif self.comboBox_bereich.currentText() == "et":
             print("et")
         elif self.comboBox_bereich.currentText() == "pls":
             print("pls")
-        pass
+
+    # errechnen gesammtwert der AW
+    def calc_sum(self, row):
+        colmn = self.tableWidget.rowCount() - 1
+        res = 0.0
+        men = 0
+        for col in range(0, colmn):
+            res = res + float(self.tableWidget.item(col, row).text())
+            men = men + int(self.tableWidget.item(col, row - 2).text())
+        kleinste = list(self.data.getFaktorkeys())[0]
+        for faktor in reversed(self.data.getFaktorkeys()):
+            if men >= int(faktor):
+                faktor = self.data.getFaktorkeys()[int(faktor)]["faktor"]
+                return faktor, res * faktor
+            elif men < kleinste:
+                faktor = self.data.getFaktorkeys()[kleinste]["faktor"]
+                return faktor, res * faktor
+            else:
+                pass
+
+    # Cellen beschreiben.
+    def set_table_cells(self):
+        colmn = self.tableWidget.rowCount()
+        for count, cell in enumerate(self.get_data_msr()):
+            self.tableWidget.setItem(colmn - 1, count, QTableWidgetItem(cell))
+        self.tableWidget.setRowCount(colmn + 1)
+
+    # daten sammel für msr
+    def get_data_msr(self):
+        ber = self.comboBox_bereich.currentText()
+        pos = self.comboBox_position.currentText()
+        bez1 = self.comboBox_bezeichner1.currentText()
+        bez2 = self.comboBox_bezeichner2.currentText()
+        leist = self.comboBox_Leistung.currentText()
+        men = self.comboBox_menge.currentText()
+        fak = self.data.getMSRfaktor(pos, bez1, bez2, leist)
+        wert = 10.0
+        komi = self.lineEdit_kommentar.displayText()
+        return [ber, bez1, bez2, pos, leist, men, str(fak), "%.2f " % (fak * (wert * int(men))), komi]
 
     def push_hinzufügen(self):
         self.setTabeleWidget()
         print("hinz")
 
+    # Löschen der Ausgewählten Zeile!
     def push_löschen(self):
-        print("delete")
+        if self.comboBox_bereich.currentText() == "---":
+            pass
+        else:
+            indexes = self.tableWidget.selectionModel().selectedRows()
+            for index in sorted(indexes):
+                self.tableWidget.removeRow(index.row())
 
     def push_erstellen(self):
         print("prot")
