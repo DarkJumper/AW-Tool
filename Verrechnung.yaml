@@ -6,43 +6,43 @@ Verrechnung:
         detail: 0
         montage: 0.1
         material: 0.5
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
       LI:
         basic: 2.7
         detail: 0
         montage: 0.1
         material: 0.8
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
       PI:
         basic: 0.4
         detail: 0
         montage: 0.1
         material: 0.2
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
       QE:
         basic: 0.3
         detail: 0
-        montage: null
-        material: null
-        PLS: null
-        konv: null
+        montage: None
+        material: None
+        PLS: None
+        konv: None
       TI:
         basic: 0.7
         detail: 0
         montage: 0.1
         material: 0.2
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
       F:
         basic: 0.3
         detail: 0
         montage: 0.1
         material: 0.2
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
     Leitstand:
       1:
         D,F,L,V:
@@ -74,10 +74,10 @@ Verrechnung:
           PLS: X
           konv: X
         M,R,U,X,Y:
-          basic: null
+          basic: None
           detail: 1.9
-          montage: null
-          material: null
+          montage: None
+          material: None
           PLS: X
           konv: X
         P,T,W:
@@ -100,21 +100,21 @@ Verrechnung:
           detail: 2
           montage: 0.5
           material: 0.3
-          PLS: null
+          PLS: None
           konv: X
         C:
           basic: 2.5
           detail: 2
           montage: 0.5
           material: 1.3
-          PLS: null
+          PLS: None
           konv: X
         I,Q,R,X:
           basic: 0.9
           detail: 2
           montage: 0.5
           material: 1.3
-          PLS: null
+          PLS: None
           konv: X
         S,Z:
           basic: 1.1
@@ -129,15 +129,15 @@ Verrechnung:
           montage: 1.1
           material: 1.3
           PLS: X
-          konv: null
+          konv: None
     weitere:
       trennung:
         basic: 0.4
         detail: 1.3
         montage: 0.4
         material: 0.5
-        PLS: null
-        konv: null
+        PLS: None
+        konv: None
   ET:
     1:
       info: Einliniendiagramm Energieverteilung
@@ -149,13 +149,13 @@ Verrechnung:
       info: Hoch- und Mittelspannungsschaltanlagen
       detail: 16
       montage: 2
-      material: null
+      material: None
       bemerkung: "Einspeise-, Kuppel-, Meß- und Abgangsfelder; ohne Motorabgangsfelder; allgemeine Festlegungen (Kurzschlußfestigkeit, Nennwerte) für alle Felder einschl. Motorabgangsfelder [Einheit: je Feld]"
     3:
       info: MS-Antriebe
       detail: 11
       montage: 2.5
-      material: null
+      material: None
       bemerkung: "Motor, Verkabelung, MS-Motorabgangsfeld, Steuerung [Einheit: je Stück]"
     4:
       info: Leistungstransformatoren bis 2,5 MVA
@@ -267,9 +267,9 @@ Verrechnung:
       bemerkung: "redundante AC/DC-Wandler (ggfs. inkl. Schrank), DC-Verteilung, Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS  [Einheit: je Stück]"
     22:
       info: Notstromaggregate
-      detail: null
-      montage: null
-      material: null
+      detail: None
+      montage: None
+      material: None
       bemerkung: "Containeraggregat oder Aggregat zum Einbau in vorhandenen Raum, Tanksystem, Schaltanlage, Steuerung  [Einheit: je Stück]"
     23:
       info: Erdung (Grundfläche)
@@ -359,64 +359,64 @@ Verrechnung:
     Funktion:
       analog:
         info: "Analoge Anzeige (max 4 Alarme)"
-        AW: 1
+        programmierung: 1
       binär:
         info: "Binäre Anzeige (Alarm)"
-        AW: 1
+        programmierung: 1
       regler1:
         info: "einfacher Regler (Festwert)"
-        AW: 1.5
+        programmierung: 1.5
       regler2:
         info: "komplexer Standardregler"
-        AW: 2.3
+        programmierung: 2.3
       ventil/motor:
         info: "Baustein für Ventil/Motor"
-        AW: 2
+        programmierung: 2
       dosierkreis:
         info: "Dosierkreis"
-        AW: 2
+        programmierung: 2
       zähler:
         info: "Einfacher Zähler Baustein"
-        AW: 0.8
+        programmierung: 0.8
       berechnung:
         info: "Übernehmen Berechnung"
-        AW: 1
+        programmierung: 1
       trend:
         info: "Trend,(Trentpunkt)"
-        AW: 0.2
+        programmierung: 0.2
       änderung:
         info: "Grafik Eintrag"
-        AW: 0.2
+        programmierung: 0.2
       protkoll:
         info: "Protokoll Eintrag"
-        AW: 0.3
+        programmierung: 0.3
     Verriegelungen:
       element:
         info: "hinzufügen je Logikelement"
-        AW: 0.4
+        programmierung: 0.4
     Grafiken:
       10 Elemente:
         info: "Bild bis zu 10 dynamische Feldern"
-        AW: 7
+        programmierung: 7
       20 Elemente:
         info: "Bild bis zu 20 dynamische Feldern"
-        AW: 8.3
+        programmierung: 8.3
       30 Elemente:
         info: "Bild bis zu 30 dynamische Feldern"
-        AW: 9.5
+        programmierung: 9.5
       40 Elemente:
         info: "Bild bis zu 40 dynamische Fedlern"
-        AW: 14
+        programmierung: 14
       gruppen:
         info: "Gruppenbild oder Trendgruppe"
-        AW: 1.2
+        programmierung: 1.2
     Sonstiges:
       ablaufsteuerung:
         info: "Schritt Ablaufsteuerung (1Transition 1 Aktion)"
-        AW: 0.8
+        programmierung: 0.8
       ausdrucke:
         info: "Bildschirmausdrucke"
-        AW: 0.2
+        programmierung: 0.2
   Mehrung:
     5:
       faktor: 1.2
@@ -430,3 +430,16 @@ Verrechnung:
       faktor: 0.7
     101:
       faktor: 0.6
+LF:
+  MSR:
+    basic: 30.00
+    material: 40.00
+    detail: 50.00
+    montage: 60.00
+  ET:
+    basic: None
+    material: 40.00
+    detail: 50.00
+    montage: 60.00
+  PLS:
+    programmierung: 70.0
