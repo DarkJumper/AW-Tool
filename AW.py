@@ -17,29 +17,14 @@ class AW:
                 else:
                     return self.msr[args[0]][args[1]][args[3]]
             elif args[0] == "Leitstand":
-                firstkey = self.msr[args[0]][1].keys()
-                for i in firstkey:
-                    if args[1][0] in i:
-                        firstkey = i
-                        break
-                if len(args[2]) > 0:
-                    secondkey = self.msr[args[0]][2].keys()
-                    for i in secondkey:
-                        if args[2] in i and len(args[2]) > 0:
-                            secondkey = i
-                            if self.msr[args[0]][1][firstkey][args[3]] == "None" or self.msr[args[0]][2][secondkey][
-                                args[3]] == "None":
-                                return None
-                            else:
-                                return self.msr[args[0]][1][firstkey][args[3]] + self.msr[args[0]][2][secondkey][args[3]
-                                                                                                                 ]
+                if len(args[1]) > 0 and len(args[2]) == 0:
+                    return self.msr[args[0]][1][args[1]][args[3]]
+                if len(args[1]) == 0 and len(args[2]) > 0:
+                    return self.msr[args[0]][2][args[2]][args[3]]
+                if len(args[2]) > 0 and len(args[1]) > 0:
+                    return self.msr[args[0]][1][args[1]][args[3]] + self.msr[args[0]][2][args[2]][args[3]]
                 else:
-                    if self.msr[args[0]][1][firstkey][args[3]] == "None":
-                        return None
-                    else:
-                        return self.msr[args[0]][1][firstkey][args[3]]
-            elif args[0] == "weitere":
-                return self.msr[args[0]][args[1]][args[3]]
+                    return None
         except KeyError:
             return None
 

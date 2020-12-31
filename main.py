@@ -1,5 +1,6 @@
 import yaml
 from AW import AW
+from createCsv import createExcel
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QTableWidgetItem
 import sys
@@ -8,7 +9,7 @@ import AW_GUI
 
 class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     # Standart Variablen im GUI
-    __version = "Beta 0.1"
+    __version = "Beta 1.0"
     _bereich = ["---", "msr", "pls", "et"]
     _leistung_msr = ["basic", "detail", "montage", "material"]
     _leistung_et = ["detail", "montage", "material"]
@@ -23,6 +24,12 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     def __init__(self, parent=None):
         super(AWApp, self).__init__(parent)
         #Initalisierung der Data class
+        # größe der Tabelle erfassen
+        self.text = []
+        self.rowCountTable = 0
+        self.usedHeader = []
+        self.faktor = 0.0
+        self.summe = 0.0
         with open('Verrechnung.yaml', 'r') as f:
             data = yaml.load(f)
             self.data = AW(
@@ -33,10 +40,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.PLSkeys = self.data.getPLSkeys()
         self.MSRkeys = self.data.getMSRkeys()
         self.ETkeys = []
-        self.ETinfo = []
         for key in self.data.getETkeys():
-            self.ETkeys.append(str(key))
-            self.ETinfo.append(self.data.getETinfo(key))
+            self.ETkeys.append(str(key) + ":" + self.data.getETinfo(key))
         self.menge = []
         for i in range(1, 100):
             self.menge.append(str(i))
@@ -123,6 +128,18 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.label_faktor.setVisible(vis)
         self.label_faktor.setText("mit Verrechnet : %.1f " % (faktor))
 
+    def get_line_auftraggeber(self):
+        return self.label_Auftraggeber.text(), self.lineEdit_Auftraggeber.text()
+
+    def get_line_auftrag_intern(self):
+        return self.label_intern.text(), self.lineEdit_intern.text()
+
+    def get_line_auftrag_extern(self):
+        return self.label_Extern.text(), self.lineEdit_Extern.text()
+
+    def get_line_bearbeiter(self):
+        return self.label_bearbeiter.text(), self.lineEdit_bearbeiter.text()
+
 
 # Events der Button und Comboboxen etc.
 # Auswahl des Abrechnungsbereiches
@@ -136,14 +153,16 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.combobox_leistung(False, "Leistung", *self._leistung_msr)
             self.defineTableWidget(0, self._msr_header)
             self.defineTableWidget(1, self._msr_header)
+            self.usedHeader = self._msr_header
         elif self.comboBox_bereich.currentText() == "et":
             self.combobox_position(True, "Position", *self.ETkeys)
-            self.combobox_bezeichner1(True, "information: ", *self.ETinfo)
+            self.combobox_bezeichner1(False, "", *self.leer)
             self.combobox_bezeichner2(False, "", *self.leer)
             self.combobox_menge(False, "Menge", *self.menge)
             self.combobox_leistung(False, "Leistung", *self._leistung_et)
             self.defineTableWidget(0, self._et_header)
             self.defineTableWidget(1, self._et_header)
+            self.usedHeader = self._et_header
         elif self.comboBox_bereich.currentText() == "pls":
             self.combobox_position(True, "Position", *self.PLSkeys)
             self.combobox_bezeichner1(False, "", *self.leer)
@@ -152,6 +171,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.combobox_leistung(False, "Leistung")
             self.defineTableWidget(0, self._pls_header)
             self.defineTableWidget(1, self._pls_header)
+            self.usedHeader = self._pls_header
         else:
             self.combobox_position(False, "", *self.leer)
             self.combobox_bezeichner1(False, "", *self.leer)
@@ -160,6 +180,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.combobox_leistung(False, "Leistung")
             self.textbox_bemerkung(False, "", "")
             self.defineTableWidget()
+            self.usedHeader = []
 
     # Auswahl der Positionen im bereich
     def auswahl_cbposition(self):
@@ -183,31 +204,27 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         elif text_cb in self.ETkeys:
             self.combobox_menge(True, "Menge", *self.menge)
             self.combobox_leistung(True, "Leistung", *self._leistung_et)
-            try:
-                item = int(self.comboBox_position.currentText())
-                self.comboBox_bezeichner1.setCurrentIndex(item)
-                self.textbox_bemerkung(True, "Bemerkung: ", self.data.getETbemerkung(item))
-            except ValueError:
-                pass
+            item = int(self.comboBox_position.currentIndex())
+            self.textbox_bemerkung(True, "Bemerkung: ", self.data.getETbemerkung(item))
         elif text_cb in self.PLSkeys:
             pls_txt = self.data.getPLSposition(self.comboBox_position.currentText())
             self.combobox_bezeichner1(True, "Auswahl: ", *pls_txt)
             self.combobox_menge(True, "Menge", *self.menge)
             self.combobox_leistung(False, "Leistung")
         else:
+            if self.comboBox_position.currentText() == self.leer:
+                item = 0
+            else:
+                item = int(self.comboBox_position.currentIndex())
+            self.combobox_bezeichner1(False, "", *self.leer)
+            self.comboBox_bezeichner1.setCurrentIndex(item)
             self.textbox_bemerkung(False, "", "")
 
     # Checkbox bezeichner 1 funktionen
     def auswahl_cbbezeichner1(self):
         text_cb = self.comboBox_position.currentText()
         text_cb1 = self.comboBox_bezeichner1.currentText()
-        if text_cb in self.ETkeys:
-            try:
-                item = self.comboBox_bezeichner1.currentIndex()
-                self.comboBox_position.setCurrentIndex(item)
-            except ValueError:
-                pass
-        elif text_cb in self.PLSkeys and text_cb1 in self.data.getPLSposition(text_cb):
+        if text_cb in self.PLSkeys and text_cb1 in self.data.getPLSposition(text_cb):
             self.textbox_bemerkung(True, "Bemerkung: ", self.data.getPLSinfo(text_cb, text_cb1))
 
     # Nach größe der Liste wird das Table Widget angepasst
@@ -235,12 +252,24 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             else:
                 pass
 
-    # Cellen beschreiben.
+    # Cellen beschreiben
     def set_table_cells(self, data):
         colmn = self.tableWidget.rowCount()
         for count, cell in enumerate(data):
             self.tableWidget.setItem(colmn - 1, count, QTableWidgetItem(cell))
         self.tableWidget.setRowCount(colmn + 1)
+
+    # Daten aus Tablewidget holen
+    def get_table_data(self):
+        f_colmn = []
+        f_row = []
+        for row in range(self.rowCountTable):
+            for column in range(self.tableWidget.columnCount()):
+                inhalt = self.tableWidget.item(row, column)
+                f_colmn.append(str(inhalt.text()))
+            f_row.append(f_colmn)
+            f_colmn = []
+        return f_row
 
     # daten sammel für msr
     def get_data_msr(self):
@@ -263,8 +292,10 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     # daten sammel für et
     def get_data_et(self):
         ber = self.comboBox_bereich.currentText()
-        pos = self.comboBox_position.currentText()
-        bez1 = self.comboBox_bezeichner1.currentText()
+        temp = self.comboBox_position.currentText()
+        temp = temp.split(":")
+        pos = temp[0]
+        bez1 = temp[1]
         leist = self.comboBox_Leistung.currentText()
         men = self.comboBox_menge.currentText()
         fak = self.data.getETfaktor(pos, leist)
@@ -298,20 +329,23 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         if self.comboBox_bereich.currentText() == "---":
             pass
         elif self.comboBox_bereich.currentText() == "msr":
+            self.rowCountTable = self.rowCountTable + 1
             self.label_ew(False, 0.0, 0.0)
             self.set_table_cells(self.get_data_msr())
-            faktor, summe = self.calc_sum(7)
-            self.label_ew(True, faktor, summe)
+            self.faktor, self.summe = self.calc_sum(7)
+            self.label_ew(True, self.faktor, self.summe)
         elif self.comboBox_bereich.currentText() == "et":
+            self.rowCountTable = self.rowCountTable + 1
             self.label_ew(False, 0.0, 0.0)
             self.set_table_cells(self.get_data_et())
-            faktor, summe = self.calc_sum(6)
-            self.label_ew(True, faktor, summe)
+            self.faktor, self.summe = self.calc_sum(6)
+            self.label_ew(True, self.faktor, self.summe)
         elif self.comboBox_bereich.currentText() == "pls":
+            self.rowCountTable = self.rowCountTable + 1
             self.label_ew(False, 0.0, 0.0)
             self.set_table_cells(self.get_data_pls())
-            faktor, summe = self.calc_sum(5)
-            self.label_ew(True, faktor, summe)
+            self.faktor, self.summe = self.calc_sum(5)
+            self.label_ew(True, self.faktor, self.summe)
         else:
             pass
 
@@ -324,20 +358,42 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             for index in sorted(indexes):
                 self.tableWidget.removeRow(index.row())
             if self.comboBox_bereich.currentText() == "msr":
+                self.rowCountTable = self.rowCountTable - 1
                 self.label_ew(False, 0.0, 0.0)
-                faktor, summe = self.calc_sum(7)
-                self.label_ew(True, faktor, summe)
+                self.faktor, self.summe = self.calc_sum(7)
+                self.label_ew(True, self.faktor, self.summe)
             elif self.comboBox_bereich.currentText() == "et":
+                self.rowCountTable = self.rowCountTable - 1
                 self.label_ew(False, 0.0, 0.0)
-                faktor, summe = self.calc_sum(6)
-                self.label_ew(True, faktor, summe)
+                self.faktor, self.summe = self.calc_sum(6)
+                self.label_ew(True, self.faktor, self.summe)
             elif self.comboBox_bereich.currentText() == "pls":
+                self.rowCountTable = self.rowCountTable - 1
                 self.label_ew(False, 0.0, 0.0)
-                faktor, summe = self.calc_sum(5)
-                self.label_ew(True, faktor, summe)
+                self.faktor, self.summe = self.calc_sum(5)
+                self.label_ew(True, self.faktor, self.summe)
 
+    # Protokoll wird erstellt nur wenn ein Inhalt in der Liste vorhanden ist.
     def push_erstellen(self):
-        print("prot")
+        try:
+            txt_geber, geber = self.get_line_auftraggeber()
+            txt_intern, intern = self.get_line_auftrag_intern()
+            txt_extern, extern = self.get_line_auftrag_extern()
+            txt_bearb, bearb = self.get_line_bearbeiter()
+            data = self.get_table_data()
+            self.create = createExcel(extern)
+            self.create.file_properties(bearb)
+            self.create.writeString(
+                1, [[txt_geber, geber], [txt_intern, intern], [txt_extern, extern], [txt_bearb, bearb]]
+                )
+            self.create.writeString(0, [self.usedHeader])
+            self.create.writeString(0, data)
+            self.create.writeString(
+                len(self.usedHeader) - 4, [["Mehrung von: ", self.faktor, "Gesammtbetrag: ", self.summe]]
+                )
+            self.create.close()
+        except AttributeError:
+            pass
 
 
 def main():
