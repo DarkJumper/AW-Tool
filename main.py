@@ -9,7 +9,7 @@ import AW_GUI
 
 class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     # Standart Variablen im GUI
-    __version = "Beta 1.0"
+    __version = "Beta 1.0a"
     _bereich = ["---", "msr", "pls", "et"]
     _leistung_msr = ["basic", "detail", "montage", "material"]
     _leistung_et = ["detail", "montage", "material"]
@@ -56,6 +56,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.combobox_bezeichner1(False, "", *self.leer)
         self.combobox_bezeichner2(False, "", *self.leer)
         self.textbox_bemerkung(False, "", "")
+        # Erstellt Anzeige
+        self.label_erstellt.setVisible(False)
         self.label_ew(True, 0.0, 0.0)
         # Funktionen zuweisen.
         self.comboBox_bereich.addItems(self._bereich)
@@ -145,6 +147,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 # Auswahl des Abrechnungsbereiches
 
     def auswahl_cbbereich(self):
+        # Erstellt Anzeige
+        self.label_erstellt.setVisible(False)
         if self.comboBox_bereich.currentText() == "msr":
             self.combobox_position(True, "Position", *self.MSRkeys)
             self.combobox_bezeichner1(False, "", *self.leer)
@@ -184,6 +188,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
     # Auswahl der Positionen im bereich
     def auswahl_cbposition(self):
+        # Erstellt Anzeige
+        self.label_erstellt.setVisible(False)
         text_cb = self.comboBox_position.currentText()
         first, second = self.data.getMSRposition(self.comboBox_position.currentText())
         if text_cb in self.MSRkeys:
@@ -222,6 +228,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
     # Checkbox bezeichner 1 funktionen
     def auswahl_cbbezeichner1(self):
+        # Erstellt Anzeige
+        self.label_erstellt.setVisible(False)
         text_cb = self.comboBox_position.currentText()
         text_cb1 = self.comboBox_bezeichner1.currentText()
         if text_cb in self.PLSkeys and text_cb1 in self.data.getPLSposition(text_cb):
@@ -326,6 +334,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
     # funktion von hinzufügen button
     def push_hinzufügen(self):
+        # Erstellt Anzeige
+        self.label_erstellt.setVisible(False)
         if self.comboBox_bereich.currentText() == "---":
             pass
         elif self.comboBox_bereich.currentText() == "msr":
@@ -354,6 +364,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         if self.comboBox_bereich.currentText() == "---":
             pass
         else:
+            # Erstellt Anzeige
+            self.label_erstellt.setVisible(False)
             indexes = self.tableWidget.selectionModel().selectedRows()
             for index in sorted(indexes):
                 self.tableWidget.removeRow(index.row())
@@ -384,14 +396,24 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.create = createExcel(extern)
             self.create.file_properties(bearb)
             self.create.writeString(
-                1, [[txt_geber, geber], [txt_intern, intern], [txt_extern, extern], [txt_bearb, bearb]]
+                1,
+                [
+                    [txt_geber, geber, "", "", "Kiel Engineering GmbH"],
+                    [txt_intern, intern, "", "", "Niederlassung Wesseling"],
+                    [txt_extern, extern, "", "", "Kölner Straße 65"], [txt_bearb, bearb, "", "", "50389 Wesseling"]
+                    ],
                 )
             self.create.writeString(0, [self.usedHeader])
+            self.create.get_width([self.usedHeader])
             self.create.writeString(0, data)
-            self.create.writeString(
-                len(self.usedHeader) - 4, [["Mehrung von: ", self.faktor, "Gesammtbetrag: ", self.summe]]
-                )
+            self.create.get_width(data)
+            end_off_data = [["Mehrung von: ", self.faktor, "Gesammtbetrag: %.2f €" % (self.summe)]]
+            self.create.writeString(len(self.usedHeader) - 3, end_off_data)
+            self.create.get_width(end_off_data)
+            self.create.set_width()
             self.create.close()
+            # Erstellt Anzeige
+            self.label_erstellt.setVisible(True)
         except AttributeError:
             pass
 

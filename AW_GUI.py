@@ -191,6 +191,17 @@ class Ui_AWTool(object):
         self.pushButton_beenden = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_beenden.setGeometry(QtCore.QRect(760, 630, 160, 32))
         self.pushButton_beenden.setObjectName("pushButton_beenden")
+        self.label_erstellt = QtWidgets.QLabel(self.centralwidget)
+        self.label_erstellt.setGeometry(QtCore.QRect(790, 460, 91, 29))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        font.setBold(False)
+        font.setItalic(True)
+        font.setUnderline(True)
+        font.setWeight(50)
+        self.label_erstellt.setFont(font)
+        self.label_erstellt.setAutoFillBackground(False)
+        self.label_erstellt.setObjectName("label_erstellt")
         AWTool.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(AWTool)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 946, 22))
@@ -232,4 +243,10 @@ class Ui_AWTool(object):
         self.label_vers.setText(_translate("AWTool", "Version:"))
         self.label_version.setText(_translate("AWTool", "----"))
         self.pushButton_beenden.setText(_translate("AWTool", "Beenden"))
+        self.label_erstellt.setToolTip(_translate("AWTool", "<html><head/><body><p><br/></p></body></html>"))
+        self.label_erstellt.setText(_translate("AWTool", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'.AppleSystemUIFont\'; font-size:13pt; font-weight:400; font-style:italic;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:24pt; font-weight:600; font-style:normal; color:#00da00;\">Erstellt!</span></p></body></html>"))
         self.toolBar.setWindowTitle(_translate("AWTool", "toolBar"))
