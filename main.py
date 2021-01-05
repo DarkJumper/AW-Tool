@@ -145,7 +145,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         msg.setWindowTitle("Information")
         msg.setText(string)
         msg.setIcon(QMessageBox.Information)
-        msg.setStandardButtons(QMessageBox.Cancel)
+        msg.setStandardButtons(QMessageBox.Ok)
         x = msg.exec_()
 
 
@@ -407,8 +407,8 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.create.writeString(len(self.usedHeader) - 3, end_off_data)
             self.create.get_width(end_off_data)
             self.create.set_width()
-            self.show_popup("Bericht wurde Erfolgreicht Erstellt!")
             self.create.close()
+            self.show_popup("Bericht wurde Erfolgreicht Erstellt!")
         except AttributeError:
             pass
 
