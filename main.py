@@ -407,7 +407,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.create.writeString(len(self.usedHeader) - 3, end_off_data)
             self.create.get_width(end_off_data)
             self.create.set_width()
-            self.show_popup("Bricht wurde Erfolgreicht Erstellt!")
+            self.show_popup("Bericht wurde Erfolgreicht Erstellt!")
             self.create.close()
         except AttributeError:
             pass
