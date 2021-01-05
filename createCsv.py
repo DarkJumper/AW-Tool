@@ -19,7 +19,6 @@ class createExcel:
     def set_width(self):
         for row in range(self.current_row):
             for colmn in range(self.last_colmn):
-                print(self.maxlen[colmn])
                 self.worksheet.set_column(row, colmn, self.maxlen[colmn] * 1.1)
 
     # Zeilen Länge ermitteln
