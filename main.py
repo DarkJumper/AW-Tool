@@ -2,7 +2,7 @@ import yaml
 from AW import AW
 from createCsv import createExcel
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QMessageBox
 import sys
 import AW_GUI
 
@@ -139,6 +139,14 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
 
     def get_line_bearbeiter(self):
         return self.label_bearbeiter.text(), self.lineEdit_bearbeiter.text()
+
+    def show_popup(self, string):
+        msg = QMessageBox()
+        msg.setWindowTitle("Information")
+        msg.setText(string)
+        msg.setIcon(QMessageBox.Information)
+        msg.setStandardButtons(QMessageBox.Cancel)
+        x = msg.exec_()
 
 
 # Events der Button und Comboboxen etc.
@@ -399,6 +407,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.create.writeString(len(self.usedHeader) - 3, end_off_data)
             self.create.get_width(end_off_data)
             self.create.set_width()
+            self.show_popup("Bricht wurde Erfolgreicht Erstellt!")
             self.create.close()
         except AttributeError:
             pass
