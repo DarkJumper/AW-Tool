@@ -5,6 +5,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QMessageBox
 import sys
 import AW_GUI
+from datetime import date
 
 
 class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
@@ -384,6 +385,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     # Protokoll wird erstellt nur wenn ein Inhalt in der Liste vorhanden ist.
     def push_erstellen(self):
         try:
+            Daydate = date.today()
             txt_geber, geber = self.get_line_auftraggeber()
             txt_intern, intern = self.get_line_auftrag_intern()
             txt_extern, extern = self.get_line_auftrag_extern()
@@ -391,6 +393,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             data = self.get_table_data()
             self.create = createExcel(extern)
             self.create.file_properties(bearb)
+            self.create.writeString(1, [["Datum: ", Daydate.strftime("%d.%m.%Y")]])
             self.create.writeString(
                 1,
                 [
