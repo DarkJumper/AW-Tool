@@ -458,13 +458,32 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>620</y>
+      <y>630</y>
       <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Createt from</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>630</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>images/dj2.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -474,7 +493,7 @@
      <x>0</x>
      <y>0</y>
      <width>946</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
