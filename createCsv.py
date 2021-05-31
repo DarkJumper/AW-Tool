@@ -26,6 +26,7 @@ class createExcel:
         for row in data:
             if self.maxlen == []:
                 for element in row:
+                    print(element)
                     self.maxlen.append(len(str(element)))
             else:
                 for element in range(len(row)):

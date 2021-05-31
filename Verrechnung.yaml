@@ -1,4 +1,4 @@
-Verrechnung:
+Leistungen:
   MSR:
     vor Ort:
       FI:
@@ -139,218 +139,182 @@ Verrechnung:
         PLS: None
         konv: None
   ET:
-    1:
-      info: Einliniendiagramm Energieverteilung
+    1:Einliniendiagramm Energieverteilung:
       detail: 10
       montage: 0
       material: 0
       bemerkung: "Darstellung von MS-Schaltanlagen, Verteiltransformatoren, Niederspannungshaupt- und Motorverteilungen, untergeordneten Verteilungen (Licht, Steckdosen) und größeren Einheiten (z.B. USV-Anlage) inkl. deren übergeordneten Einspeisungen [Einheit: je Einzelstück]"
-    2:
-      info: Hoch- und Mittelspannungsschaltanlagen
+    2:Hoch- und Mittelspannungsschaltanlagen:
       detail: 16
       montage: 2
       material: None
       bemerkung: "Einspeise-, Kuppel-, Meß- und Abgangsfelder; ohne Motorabgangsfelder; allgemeine Festlegungen (Kurzschlußfestigkeit, Nennwerte) für alle Felder einschl. Motorabgangsfelder [Einheit: je Feld]"
-    3:
-      info: MS-Antriebe
+    3:MS-Antriebe:
       detail: 11
       montage: 2.5
       material: None
       bemerkung: "Motor, Verkabelung, MS-Motorabgangsfeld, Steuerung [Einheit: je Stück]"
-    4:
-      info: Leistungstransformatoren bis 2,5 MVA
+    4:Leistungstransformatoren bis 2,5 MVA:
       detail: 12
       montage: 5.5
       material: 2
       bemerkung: "Transformator; Einspeisung; Verkabelung; für MS-Abgangsfeld nur Planung/Abstimmung  [Einheit: je Stück]"
-    5:
-      info: Trafoeinhausung
+    5:Trafoeinhausung:
       detail: 1.6
       montage: 3.5
       material: 2
       bemerkung: "für Trockentrafos bei Freiluftaufstellung  [Einheit: je Stück]"
-    6:
-      info: Niederspannungshauptverteilung
+    6:Niederspannungshauptverteilung:
       detail: 12
       montage: 1.1
       material: 2.9
       bemerkung: "Einspeise-, Kuppel-, Sicherungs- und Leistungsschalter-Abgangsfelder  [Einheit: je Feld]"
-    7:
-      info: NS-Verteilungen (Motor- / Sicherungs- Abgangsfeld)
+    7:NS-Verteilungen (Motor- / Sicherungs- Abgangsfeld):
       detail: 5
       montage: 0.5
       material: 1.5
       bemerkung: "Einspeisefelder, Kuppefelder-, Sicherungs/Leistungsschalterabgangsfelder, Motorabgangsfelder (nur Feld, ohne Motorabgänge)  [Einheit: je Feld]"
-    8:
-      info: NS-Motor
+    8:NS-Motor:
       detail: 3
       montage: 1
       material: 2
       bemerkung: "Motorspezifikation erstellen (NS-Normmotoren); Grundlage sind beigestellte Maschinendaten  [Einheit: je Stück]"
-    9:
-      info: Elektrische Antriebe
+    "9:Elektrische Antriebe":
       detail: 7.1
       montage: 1.5
       material: 2.5
       bemerkung: "Verkabelung, Motorabgang (Einschub, Plattentechnik o.ä.), Steuerung; Motordaten liegen vor (wird als Teil des Aggregats beigestellt)  [Einheit: je Stück]"
-    10:
-      info: Frequenzumformer (zusätzlich zum Antrieb)
+    10:Frequenzumformer (zusätzlich zum Antrieb):
       detail: 11
       montage: 1.5
       material: 3.5
       bemerkung: "FU inkl. Beschaltung und Steuerung  [Einheit: je Stück]"
-    11:
-      info: Sanftanlauf (zusätzlich zum Antrieb)
+    11:Frequenzumformer (zusätzlich zum Antrieb):
       detail: 9
       montage: 1.5
       material: 3
       bemerkung: "Sanftanlaufgerät inkl. Beschaltung und Steuerung  [Einheit: je Stück]"
-    12:
-      info: sonstige Einzelverbraucher (z.B. Sich.-Abgang)
+    12:sonstige Einzelverbraucher (z.B. Sich.-Abgang):
       detail: 4
       montage: 1
       material: 1.5
       bemerkung: "Package Units mit (ungeschalteter) Stromversorgung und PLS-Schnittstelle (ca. 5 Signale)  [Einheit: je Stück]"
-    13:
-      info: Steckdosenkombinationen
+    13:Steckdosenkombinationen:
       detail: 2.5
       montage: 0.8
       material: 1.8
       bemerkung: "Verbraucher mit ungeschalteter Stromversorgung ohne PLS-Schnittstelle  [Einheit: je Stück]"
-    14:
-      info: Licht-/Steckdosen-/Frostschutz-/USV-Verteilungen
+    14:Licht-/Steckdosen-/Frostschutz-/USV-Verteilungen:
       detail: 18
       montage: 2
       material: 8
       bemerkung: "Schrank mit Grundausstattung (Einspeisebereich, Steuerspannung, ca. 5 Licht- oder 20 LSS-Abgänge), Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS  [Einheit: je Stück]"
-    15:
-      info: Normalbeleuchtung in Anlage
+    15:Normalbeleuchtung in Anlage:
       detail: 3.5
       montage: 2
       material: 2.5
       bemerkung: "Leuchten, Verkabelung, Steuerung, Abgang aus Lichtverteilung  [Einheit: je Kreis]"
-    16:
-      info: "Not-/Ersatz-/Sicherheitsbeleuchtung: Verteilung"
+    16:Not-/Ersatz-/Sicherheitsbeleuchtung:Verteilung:
       detail: 24
       montage: 2
       material: 8
       bemerkung: "Zentralbatterie- oder Gruppenlichtgerät inkl. Grundausstattung für ca. 5 Lichtabgänge, Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS  [Einheit: je Stück]"
-    17:
-      info: Sicherheitsbeleuchtung in Anlage
+    17:Sicherheitsbeleuchtung in Anlage:
       detail: 3.5
       montage: 2
       material: 2.5
       bemerkung: "Leuchten inkl. Positionierung, Verkabelung, Steuerung, Abgang aus Notlichtverteilung [Einheit: je Kreis]"
-    18:
-      info: Schaltschrank Elektrische Begleitheizung
+    18:Schaltschrank Elektrische Begleitheizung:
       detail: 19
       montage: 2
       material: 9
       bemerkung: "Schrank mit Grundausstattung (Einspeisebereich, Steuerung, ca. 8 geregelte und 12 ungeregelte Heizkreis-Abgänge), Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS  [Einheit: je Stück]"
-    19:
-      info: Elektrische Begleitheizung
+    19:Elektrische Begleitheizung:
       detail: 2
       montage: 1
       material: 1.5
       bemerkung: "Vor-Ort-Ausrüstung (Heizkabel, Messungen, Zubehör, Befestigung), Verkabelung, Abgang aus Beheizungs-Schaltschrank  [Einheit: je Heizkreis]"
-    20:
-      info: USV-Anlagen
+    20:USV-Anlagen:
       detail: 15.5
       montage: 4
       material: 8
       bemerkung: "Online-Kompaktanlage inkl. Batteriesatz, Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS oder Batteriesatz, Wechselrichter, Bypass, ca. 5 Abgänge, Schnittstelle zum PLS (bei vorhandener DC-Erzeugung, Pos 22)  [Einheit: je Stück]"
-    21:
-      info: DC-Gleichstromversorgung 24V
+    21:DC-Gleichstromversorgung 24V:
       detail: 22
       montage: 4
       material: 12.5
       bemerkung: "redundante AC/DC-Wandler (ggfs. inkl. Schrank), DC-Verteilung, Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS  [Einheit: je Stück]"
-    22:
-      info: Notstromaggregate
+    22:Notstromaggregate:
       detail: None
       montage: None
       material: None
       bemerkung: "Containeraggregat oder Aggregat zum Einbau in vorhandenen Raum, Tanksystem, Schaltanlage, Steuerung  [Einheit: je Stück]"
-    23:
-      info: Erdung (Grundfläche)
+    23:Erdung (Grundfläche):
       detail: 4
       montage: 8
       material: 2
       bemerkung: "Fundamenterdung und Ringerder mit Anbindung an zentrale Haupt-PA-Schiene, Stahlbau und Werks-Erdungssystem, zentrale Einrichtungen für Potentialausgleich in der Anlage (z.B. PA-Schienen); ohne die Anbindung aller Geräte (z.B. Motore), da diese in der Planung der Geräte enthalten ist  [Einheit: je Ebene]"
-    24:
-      info: Potentialausgleich
+    24:Potentialausgleich:
       detail: 1
       montage: 2.5
       material: 1.5
       bemerkung: "Potentialausgleich"
-    25:
-      info: Gebäude-Blitzschutz
+    25:Gebäude-Blitzschutz:
       detail: 5.2
       montage: 5
       material: 5.5
       bemerkung: "Dach-Fangeinrichtungen, Ableiter; ohne Fundamenterdung/Ringerder (s.o.)  [Einheit: je Gebäude]"
-    26:
-      info: E-Schaltraum(Anordnungsplan)
+    26:E-Schaltraum(Anordnungsplan):
       detail: 6
       montage: 3.5
       material: 0
       bemerkung: " [Einheit: je Stück]"
-    27:
-      info: Kabeldoppelboden
+    27:Kabeldoppelboden:
       detail: 7.5
       montage: 1.5
       material: 6
       bemerkung: "inkl. Treppen, Rahmen für Schrankaufstellung etc.  [Einheit: je Raum]"
-    28:
-      info: Schaltraumkühlanlagen
+    28:Schaltraumkühlanlagen:
       detail: 7.3
       montage: 2.5
       material: 6.5
       bemerkung: "Innen- und Außengerät, Einspeisung inkl. übergeordnetem Abgang, Schnittstelle zum PLS oder Einbindung in übergeordnete Klimaanlage  [Einheit: je Stück]"
-    29:
-      info: Hauptkabeltrassen
+    29:Hauptkabeltrassen:
       detail: 1.2
       montage: 12
       material: 1.2
       bemerkung: " [Einheit: je 400m² oder 40m Länge]"
-    30:
-      info: Anlagen- Wechselsprechanlage Zentrale
+    30:Anlagen- Wechselsprechanlage Zentrale:
       detail: 14
       montage: 2
       material: 13
       bemerkung: "Schrank mit Grundausstattung (Spannungsversorgung, Steuerung, zentrale Einrichtungen, Grundausstattung an Abgängen), Einspeisung inkl. übergeordnetem Abgang, Schnittstellen (Telefonanlage, Brandmeldeanlage, PLS)  [Einheit: je Stück]"
-    31:
-      info: Anlagen- Wechselsprechstellen/-lautsprecher
+    31:Anlagen- Wechselsprechstellen/-lautsprecher:
       detail: 0.8
       montage: 1
       material: 1
       bemerkung: "Vor-Ort-Ausrüstung (Sprechstelle, Zusatzlautsprecher), Verkabelung, Abgang aus Zentrale  [Einheit: je Stelle]"
-    32:
-      info: Telefonanlage Zentrale
+    32:Telefonanlage Zentrale:
       detail: 14
       montage: 2
       material: 13
       bemerkung: "Schrank mit Grundausstattung (Spannungsversorgung, Steuerung, zentrale Einrichtungen, Grundausstattung an Abgängen), Einspeisung inkl. übergeordnetem Abgang, Schnittstellen (Wechselsprechanlage, Brandmeldeanlage, PLS), Anbindung an übergeordnetes Telefonnetz  [Einheit: je Stück]"
-    33:
-      info: Telefonanlage Sprechstelle
+    33:Telefonanlage Sprechstelle:
       detail: 0.5
       montage: 0.8
       material: 0.5
       bemerkung: "Telefonapparat, Verkabelung, Abgang aus Zentrale  [Einheit: je Stück]"
-    34:
-      info: Brandmelde-/Notrufanlagen Zentrale
+    34:Brandmelde-/Notrufanlagen Zentrale:
       detail: 14
       montage: 2
       material: 13
       bemerkung: "Schrank mit Grundausstattung (Spannungsversorgung, Steuerung, zentrale Einrichtungen, Grundausstattung an Abgängen), Einspeisung inkl. übergeordnetem Abgang, Schnittstellen (Wechselsprechanlage, Telefonanlage, PLS), Anbindung an übergeordnetes Notrufnetz  [Einheit: je Stück]"
-    35:
-      info: Brandmelde-/Notrufmelder
+    35:Brandmelde-/Notrufmelder:
       detail: 2
       montage: 1
       material: 1.5
       bemerkung: "Brandmelder/Notruf-Schlagtaster, Verkabelung, Abgang aus Zentrale  [Einheit: je Linie]"
-    36:
-      info: TGA in Betriebs- und Sozialgebäuden
+    36:TGA in Betriebs- und Sozialgebäuden:
       detail: 2
       montage: 1.5
       material: 1.5
@@ -358,65 +322,78 @@ Verrechnung:
   PLS:
     Funktion:
       analog:
-        info: "Analoge Anzeige (max 4 Alarme)"
+        bemerkung: "Analoge Anzeige (max 4 Alarme)"
         programmierung: 1
       binär:
-        info: "Binäre Anzeige (Alarm)"
+        bemerkung: "Binäre Anzeige (Alarm)"
         programmierung: 1
       regler1:
-        info: "einfacher Regler (Festwert)"
+        bemerkung: "einfacher Regler (Festwert)"
         programmierung: 1.5
       regler2:
-        info: "komplexer Standardregler"
+        bemerkung: "komplexer Standardregler"
         programmierung: 2.3
       ventil/motor:
-        info: "Baustein für Ventil/Motor"
+        bemerkung: "Baustein für Ventil/Motor"
         programmierung: 2
       dosierkreis:
-        info: "Dosierkreis"
+        bemerkung: "Dosierkreis"
         programmierung: 2
       zähler:
-        info: "Einfacher Zähler Baustein"
+        bemerkung: "Einfacher Zähler Baustein"
         programmierung: 0.8
       berechnung:
-        info: "Übernehmen Berechnung"
+        bemerkung: "Übernehmen Berechnung"
         programmierung: 1
       trend:
-        info: "Trend,(Trentpunkt)"
+        bemerkung: "Trend,(Trentpunkt)"
         programmierung: 0.2
       änderung:
-        info: "Grafik Eintrag"
+        bemerkung: "Grafik Eintrag"
         programmierung: 0.2
       protkoll:
-        info: "Protokoll Eintrag"
+        bemerkung: "Protokoll Eintrag"
         programmierung: 0.3
     Verriegelungen:
       element:
-        info: "hinzufügen je Logikelement"
+        bemerkung: "hinzufügen je Logikelement"
         programmierung: 0.4
     Grafiken:
       10 Elemente:
-        info: "Bild bis zu 10 dynamische Feldern"
+        bemerkung: "Bild bis zu 10 dynamische Feldern"
         programmierung: 7
       20 Elemente:
-        info: "Bild bis zu 20 dynamische Feldern"
+        bemerkung: "Bild bis zu 20 dynamische Feldern"
         programmierung: 8.3
       30 Elemente:
-        info: "Bild bis zu 30 dynamische Feldern"
+        bemerkung: "Bild bis zu 30 dynamische Feldern"
         programmierung: 9.5
       40 Elemente:
-        info: "Bild bis zu 40 dynamische Fedlern"
+        bemerkung: "Bild bis zu 40 dynamische Fedlern"
         programmierung: 14
       gruppen:
-        info: "Gruppenbild oder Trendgruppe"
+        bemerkung: "Gruppenbild oder Trendgruppe"
         programmierung: 1.2
     Sonstiges:
       ablaufsteuerung:
-        info: "Schritt Ablaufsteuerung (1Transition 1 Aktion)"
+        bemerkung: "Schritt Ablaufsteuerung (1Transition 1 Aktion)"
         programmierung: 0.8
       ausdrucke:
-        info: "Bildschirmausdrucke"
+        bemerkung: "Bildschirmausdrucke"
         programmierung: 0.2
+LeistungsFaktor:
+  MSR:
+    basic: 30.00
+    material: 40.00
+    detail: 50.00
+    montage: 60.00
+  ET:
+    basic: None
+    material: 40.00
+    detail: 50.00
+    montage: 60.00
+  PLS:
+    programmierung: 70.0
   Mehrung:
     5:
       faktor: 1.2
@@ -430,16 +407,8 @@ Verrechnung:
       faktor: 0.7
     101:
       faktor: 0.6
-LF:
-  MSR:
-    basic: 30.00
-    material: 40.00
-    detail: 50.00
-    montage: 60.00
-  ET:
-    basic: None
-    material: 40.00
-    detail: 50.00
-    montage: 60.00
-  PLS:
-    programmierung: 70.0
+Header:
+  MSR: "Bereich,Bezeichnung 1,Bezeichnung 2,Position,Leistung,Menge,Faktor,Wert,Kommentar"
+  ET: "Bereich,Bezeichnung 1,information,Leistung,Menge,Faktor,Wert,Kommentar"
+  PLS: "Bereich,Bezeichnung,Position,Menge,Faktor,Wert,Kommentar"
+  
