@@ -170,9 +170,7 @@ class PLS(AW):
 
     @property
     def service_price(self):
-        print(self.spec)
-        print(self.prices)
-        return self.all_services["PLS"][self.detail_bez1][self.spec][self.prices]
+        return self.all_services["PLS"][self.detail_bez1][self.spec]["programmierung"]
 
     @service_price.setter
     def service_price(self, price):

@@ -408,7 +408,7 @@ LeistungsFaktor:
     101:
       faktor: 0.6
 Header:
-  MSR: "Bereich,Bezeichnung 1,Bezeichnung 2,Position,Leistung,Menge,Faktor,Wert,Kommentar"
-  ET: "Bereich,Bezeichnung 1,information,Leistung,Menge,Faktor,Wert,Kommentar"
-  PLS: "Bereich,Bezeichnung,Position,Menge,Faktor,Wert,Kommentar"
+  MSR: "Nr,Beschreibung,Bereich,Bezeichnung 1,Bezeichnung 2,Position,Leistung,Menge,Faktor,Verrechnung in %,Wert"
+  ET: "Nr,Beschreibung,Bereich,Bezeichnung,Leistung,Menge,Faktor,Verrechnung in %,Wert"
+  PLS: "Nr,Beschreibung,Bereich,Bezeichnung,Position,Menge,Faktor,Verrechnung in %,Wert"
   
