@@ -5,7 +5,7 @@ import AW_GUI
 from AW import ET, MSR, PLS
 from createCsv import createExcel
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QMessageBox, QTableWidget
 from datetime import date
 
 
@@ -19,9 +19,12 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     def __init__(self, parent=None):
         super(AWApp, self).__init__(parent)
         self.text = []
-        self.rowCountTable = 0
+        self.lookup = dict()
+        self.rowCountTable = 1
         self.faktor = 0.0
         self.summe = 0.0
+        self.prozent = 100.0
+        self.clicked = True
         file = 'Verrechnung.yaml'
         try:
             with open(file, 'r') as f:
@@ -166,13 +169,17 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.textbox_bemerkung(False, "", "")
             self.defineTableWidget()
             self.usedHeader = []
+            self.lookup = dict()
         else:
             if cb_text == "MSR":
                 self.current_func = self.msr
+                self.lookup = dict()
             if cb_text == "ET":
                 self.current_func = self.et
+                self.lookup = dict()
             if cb_text == "PLS":
                 self.current_func = self.pls
+                self.lookup = dict()
             self.combobox_position(True, "Position", *self.current_func.position)
             self.combobox_menge(True, "Menge", *self.amount)
             self.combobox_bezeichner1(False, "")
@@ -229,24 +236,26 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         self.tableWidget.setRowCount(begin)
         self.tableWidget.setColumnCount(len(list))
         self.tableWidget.setHorizontalHeaderLabels(list)
+        self.tableWidget.itemChanged.connect(self.changed_data)
+        self.tableWidget.itemClicked.connect(self.cell_clicked)
 
     # errechnen gesammtwert der AW
     def calc_sum(self, row):
         colmn = self.tableWidget.rowCount() - 1
-        res = 0.0
+        price = 0.0
         men = 0
         for col in range(0, colmn):
-            res = res + float(self.tableWidget.item(col, row).text())
-            men = men + int(self.tableWidget.item(col, row - 2).text())
+            price = price + float(self.tableWidget.item(col, row - 1).text())
+            men = men + int(self.tableWidget.item(col, row - 4).text())
         kleinste = list(self.current_func.increase)[0]
         if men < kleinste:
             faktor = self.current_func.increase[int(kleinste)]["faktor"]
-            return faktor, res * faktor
+            return faktor, faktor * price
         else:
             for faktor in reversed(self.current_func.increase):
                 if men >= int(faktor):
                     faktor = self.current_func.increase[int(faktor)]["faktor"]
-                    return faktor, res * faktor
+                    return faktor, faktor * price
 
     # Cellen beschreiben
     def set_table_cells(self, data):
@@ -259,7 +268,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     def get_table_data(self):
         f_colmn = []
         f_row = []
-        for row in range(self.rowCountTable):
+        for row in range(self.rowCountTable - 2):
             for column in range(self.tableWidget.columnCount()):
                 inhalt = self.tableWidget.item(row, column)
                 f_colmn.append(str(inhalt.text()))
@@ -275,24 +284,36 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         bez2 = self.comboBox_bezeichner2.currentText()
         leist = self.comboBox_Leistung.currentText()
         men = self.comboBox_menge.currentText()
-        self.current_func.service_price = leist
         self.current_func.effortprice = leist
-        fak = self.current_func.service_price
+        fak1 = 0.0
+        if bez1 != self._dashes[0]:
+            self.current_func.bez1 = pos
+            self.current_func.service_spec = bez1
+            self.current_func.service_price = leist
+            fak1 = float(self.current_func.service_price)
+        fak2 = 0.0
+        if bez2 != self._dashes[0]:
+            self.current_func.bez2 = pos
+            self.current_func.service_spec = bez2
+            self.current_func.service_price = leist
+            fak2 = float(self.current_func.service_price)
         wert = self.current_func.effortprice
         komi = self.lineEdit_kommentar.displayText()
-        if fak == None or wert == None:
+        if fak1 == None or wert == None:
             komi = "Leistung nicht vorhanden!"
             self.show_popup_info(komi)
             return None
-        return [ber, bez1, bez2, pos, leist, men, str(fak), "%.2f " % (fak * (wert * int(men))), komi]
+        return [
+            komi, ber, bez1, bez2, pos, leist, men,
+            "%.1f" % (fak1+fak2),
+            str(self.prozent),
+            "%.2f " % ((fak1+fak2) * (self.prozent / 100.0) * (wert * int(men)))
+            ]
 
     # daten sammel für et
     def get_data_et(self):
         ber = self.comboBox_bereich.currentText()
-        temp = self.comboBox_position.currentText()
-        temp = temp.split(":")
-        pos = temp[0]
-        bez1 = temp[1]
+        pos = self.comboBox_position.currentText()
         leist = self.comboBox_Leistung.currentText()
         men = self.comboBox_menge.currentText()
         self.current_func.service_price = leist
@@ -304,7 +325,12 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             komi = "Leistung nicht vorhanden!"
             self.show_popup_info(komi)
             return None
-        return [ber, pos, bez1, leist, men, str(fak), "%.2f " % (fak * (wert * int(men))), komi]
+        return [
+            komi, ber, pos, leist, men,
+            str(fak),
+            str(self.prozent),
+            "%.2f " % (fak * (self.prozent / 100) * (wert * int(men)))
+            ]
 
     # daten sammel für pls
     def get_data_pls(self):
@@ -319,38 +345,64 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         if fak == None or wert == None:
             self.show_popup_info("Leistung ist nicht vorhanden!")
             return None
-        return [ber, bez1, pos, men, str(fak), "%.2f " % (fak * (wert * int(men))), komi]
+        return [
+            komi, ber, bez1, pos, men,
+            str(fak),
+            str(self.prozent),
+            "%.2f " % (fak * (self.prozent / 100) * (wert * int(men)))
+            ]
+
+    def cell_clicked(self):
+        self.clicked = True
+
+    # Daten änderungen in Table
+    def changed_data(self, item):
+        row = item.row()
+        col = item.column()
+        if col == self.tableWidget.columnCount() - 2 and self.clicked == True:
+            #faktor = float(self.lookup[row + 1][0])
+            price = float(self.lookup[row + 1][1])
+            pro = float(self.tableWidget.item(row, self.tableWidget.columnCount() - 2).text()) / 100.0
+            self.tableWidget.setItem(row, col + 1, QTableWidgetItem("%.2f " % (price*pro)))
+            self.faktor, self.summe = self.calc_sum(len(self.current_func.table_header))
+            self.label_ew(True, self.faktor, self.summe)
+            self.clicked = False
 
     # funktion von hinzufügen button
     def push_hinzufügen(self):
         try:
+            self.tableWidget.blockSignals(True)
             if self.comboBox_bereich.currentText() == "MSR":
                 self.label_ew(False, 0.0, 0.0)
-                if self.get_data_msr() == None:
-                    pass
-                else:
-                    self.rowCountTable = self.rowCountTable + 1
-                    self.set_table_cells(self.get_data_msr())
-                    self.faktor, self.summe = self.calc_sum(7)
-                    self.label_ew(True, self.faktor, self.summe)
+                msr_data = self.get_data_msr()
+                self.set_table_cells([str(self.rowCountTable)] + msr_data.copy())
+                self.faktor, self.summe = self.calc_sum(len(self.current_func.table_header))
+                self.lookup[self.rowCountTable] = [msr_data[-3], msr_data[-1]]
+                self.label_ew(True, self.faktor, self.summe)
+                self.rowCountTable = self.rowCountTable + 1
+                self.tableWidget.blockSignals(False)
             elif self.comboBox_bereich.currentText() == "ET":
                 self.label_ew(False, 0.0, 0.0)
                 if self.get_data_et() == None:
                     pass
                 else:
-                    self.rowCountTable = self.rowCountTable + 1
-                    self.set_table_cells(self.get_data_et())
-                    self.faktor, self.summe = self.calc_sum(6)
+                    self.set_table_cells([str(self.rowCountTable)] + self.get_data_et())
+                    self.faktor, self.summe = self.calc_sum(len(self.current_func.table_header))
+                    self.lookup[self.rowCountTable] = [self.get_data_et()[-3], self.get_data_et()[-1]]
                     self.label_ew(True, self.faktor, self.summe)
+                    self.rowCountTable = self.rowCountTable + 1
+                    self.tableWidget.blockSignals(False)
             elif self.comboBox_bereich.currentText() == "PLS":
                 self.label_ew(False, 0.0, 0.0)
-                if self.get_datapls() == None:
+                if self.get_data_pls() == None:
                     pass
                 else:
-                    self.rowCountTable = self.rowCountTable + 1
-                    self.set_table_cells(self.get_data_pls())
-                    self.faktor, self.summe = self.calc_sum(5)
+                    self.set_table_cells([str(self.rowCountTable)] + self.get_data_pls())
+                    self.faktor, self.summe = self.calc_sum(len(self.current_func.table_header))
+                    self.lookup[self.rowCountTable] = [self.get_data_pls()[-3], self.get_data_pls()[-1]]
                     self.label_ew(True, self.faktor, self.summe)
+                    self.rowCountTable = self.rowCountTable + 1
+                    self.tableWidget.blockSignals(False)
             else:
                 pass
         except KeyError:
@@ -365,20 +417,12 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             indexes = self.tableWidget.selectionModel().selectedRows()
             for index in sorted(indexes):
                 self.tableWidget.removeRow(index.row())
-            if self.comboBox_bereich.currentText() == "msr":
+                self.new_lookup(int(index.row()) + 1)
+                print(self.lookup)
+                self.new_ids()
                 self.rowCountTable = self.rowCountTable - 1
                 self.label_ew(False, 0.0, 0.0)
-                self.faktor, self.summe = self.calc_sum(7)
-                self.label_ew(True, self.faktor, self.summe)
-            elif self.comboBox_bereich.currentText() == "et":
-                self.rowCountTable = self.rowCountTable - 1
-                self.label_ew(False, 0.0, 0.0)
-                self.faktor, self.summe = self.calc_sum(6)
-                self.label_ew(True, self.faktor, self.summe)
-            elif self.comboBox_bereich.currentText() == "pls":
-                self.rowCountTable = self.rowCountTable - 1
-                self.label_ew(False, 0.0, 0.0)
-                self.faktor, self.summe = self.calc_sum(5)
+                self.faktor, self.summe = self.calc_sum(len(self.current_func.table_header))
                 self.label_ew(True, self.faktor, self.summe)
 
     # Protokoll wird erstellt nur wenn ein Inhalt in der Liste vorhanden ist.
@@ -413,6 +457,17 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.show_popup_info("Bericht wurde Erfolgreicht Erstellt!")
         except AttributeError:
             pass
+
+    def new_lookup(self, delete):
+        len_lookup = len(list(self.lookup.keys()))
+        for key in range(delete, len_lookup):
+            self.lookup.update({key: self.lookup[key + 1]})
+            last_key = key
+        del self.lookup[last_key + 1]
+
+    def new_ids(self):
+        for row in range(self.rowCountTable - 2):
+            self.tableWidget.setItem(row, 0, QTableWidgetItem(str(row + 1)))
 
 
 def main():
