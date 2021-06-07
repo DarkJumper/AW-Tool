@@ -27,10 +27,10 @@ class Ui_Rezept(object):
 
         self.gridLayout.addWidget(self.label_bereich, 1, 0, 1, 1)
 
-        self.comboBox_Leistung = QComboBox(Rezept)
-        self.comboBox_Leistung.setObjectName(u"comboBox_Leistung")
+        self.comboBox_leistung = QComboBox(Rezept)
+        self.comboBox_leistung.setObjectName(u"comboBox_leistung")
 
-        self.gridLayout.addWidget(self.comboBox_Leistung, 5, 2, 1, 1)
+        self.gridLayout.addWidget(self.comboBox_leistung, 5, 2, 1, 1)
 
         self.lineEdit_Bemerkung = QLineEdit(Rezept)
         self.lineEdit_Bemerkung.setObjectName(u"lineEdit_Bemerkung")
@@ -82,10 +82,10 @@ class Ui_Rezept(object):
 
         self.gridLayout.addWidget(self.label_position, 2, 0, 1, 1)
 
-        self.comboBox_bezeichnun1 = QComboBox(Rezept)
-        self.comboBox_bezeichnun1.setObjectName(u"comboBox_bezeichnun1")
+        self.comboBox_bezeichnung1 = QComboBox(Rezept)
+        self.comboBox_bezeichnung1.setObjectName(u"comboBox_bezeichnung1")
 
-        self.gridLayout.addWidget(self.comboBox_bezeichnun1, 3, 2, 1, 1)
+        self.gridLayout.addWidget(self.comboBox_bezeichnung1, 3, 2, 1, 1)
 
         self.pushButton_anwenden = QPushButton(Rezept)
         self.pushButton_anwenden.setObjectName(u"pushButton_anwenden")

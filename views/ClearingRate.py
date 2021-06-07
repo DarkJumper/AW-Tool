@@ -1,7 +1,95 @@
-from abc import abstractproperty
+import yaml
+
+from abc import abstractmethod
 
 
 class AW:
+
+    def __init__(self) -> None:
+        self.prices = str()
+        self.result_spec = list()
+        self.result_pose = str()
+        self.result_price = str()
+        self.result_bez1 = list()
+        self.result_bez2 = list()
+        file = 'Verrechnung.yaml'
+        with open(file, 'r') as f:
+            self.data = yaml.load(f)
+            self._area = Area(self.data)
+
+    def __call__(self):
+        print("test")
+
+    @property
+    def area(self):
+        return self._area
+
+    @area.setter
+    def area(self, area):
+        self._area = area(self.data)
+
+    @property
+    def services(self):
+        return self._area.services()
+
+    @property
+    def increase(self):
+        return self._area.increase()
+
+    @property
+    def name(self):
+        return self._area.name()
+
+    @property
+    def position(self):
+        return self._area.position()
+
+    @property
+    def bez1(self):
+        return self.result_bez1
+
+    @bez1.setter
+    def bez1(self, detail_bez):
+        self.result_bez1 = self._area.bez1(detail_bez)
+
+    @property
+    def bez2(self):
+        return self.result_bez2
+
+    @bez2.setter
+    def bez2(self, detail_bez):
+        self.result_bez2 = self._area.bez2(detail_bez)
+
+    @property
+    def note(self):
+        return self.result_pose
+
+    @note.setter
+    def note(self, pose):
+        self.result_pose = self._area.note(pose)
+
+    @property
+    def service_spec(self):
+        return self.result_spec
+
+    @service_spec.setter
+    def service_spec(self, spec):
+        self.result_spec = self._area.service_spec(spec)
+
+    @property
+    def service_price(self):
+        return self.result_price
+
+    @service_price.setter
+    def service_price(self, price):
+        self.result_price = self._area.service_price(price)
+
+    @property
+    def table_header(self):
+        return self._area.table_header()
+
+
+class Area:
 
     def __init__(self, data):
         self.prices = str()
@@ -14,67 +102,61 @@ class AW:
         self.lf = data['LeistungsFaktor']
         self.all_header = data["Header"]
 
-    @property
     def services(self):
         return list(self.all_services.keys())
 
-    @property
     def increase(self):
         return self.lf["Mehrung"]
 
-    @abstractproperty
+    @abstractmethod
+    def name(self):
+        pass
+
+    @abstractmethod
     def position(self):
         pass
 
-    @abstractproperty
-    def bez1(self):
+    @abstractmethod
+    def bez1(self, detail_bez):
         pass
 
-    @abstractproperty
-    def bez2(self):
+    @abstractmethod
+    def bez2(self, detail_bez):
         pass
 
-    @abstractproperty
-    def note(self):
+    @abstractmethod
+    def note(self, pose):
         pass
 
-    @abstractproperty
-    def service_spec(self):
+    @abstractmethod
+    def service_spec(self, spec):
         pass
 
-    @abstractproperty
-    def service_price(self):
+    @abstractmethod
+    def service_price(self, price):
         pass
 
-    @abstractproperty
+    @abstractmethod
     def table_header(self):
         pass
 
 
-class ET(AW):
+class ET(Area):
 
-    @property
+    def name(self):
+        return "ET"
+
     def position(self):
         return list(self.all_services["ET"].keys())
 
-    @property
-    def bez1(self):
-        return None
-
-    @bez1.setter
     def bez1(self, detail_bez):
-        self.detail_bez1 = ""
-
-    @property
-    def bez2(self):
         return None
 
-    @bez2.setter
     def bez2(self, detail_bez):
-        self.detail_bez2 = ""
+        return None
 
-    @property
-    def note(self):
+    def note(self, pose):
+        self.pose = pose
         try:
             if self.all_services["ET"][self.pose]["bemerkung"] != None:
                 return self.all_services["ET"][self.pose]["bemerkung"]
@@ -83,67 +165,43 @@ class ET(AW):
         except KeyError:
             return None
 
-    @note.setter
-    def note(self, pose):
-        self.pose = pose
-
-    @property
-    def service_spec(self):
+    def service_spec(self, spec):
+        self.spec = spec
         if self.spec == "" or self.spec == "---":
             return None
         all_indexes = list(self.all_services["ET"][self.spec].keys())
         all_indexes.remove("bemerkung")
         return all_indexes
 
-    @service_spec.setter
-    def service_spec(self, spec):
-        self.spec = spec
-
-    @property
-    def service_price(self):
+    def service_price(self, price):
+        self.price = price
         return self.all_services["ET"][self.spec][self.prices]
 
-    @service_price.setter
-    def service_price(self, price):
-        self.prices = price
-
-    @property
     def table_header(self):
         return list(self.all_header["ET"].split(','))
 
-    @property
-    def effortprice(self):
-        return float(self.lf["ET"][self.price])
-
-    @effortprice.setter
     def effortprice(self, price):
         self.price = price
+        return float(self.lf["ET"][self.price])
 
 
-class PLS(AW):
+class PLS(Area):
 
-    @property
+    def name(self):
+        return "PLS"
+
     def position(self):
         return list(self.all_services["PLS"].keys())
 
-    @property
-    def bez1(self):
-        return list(self.all_services["PLS"][self.detail_bez1].keys())
-
-    @bez1.setter
     def bez1(self, detail_bez):
         self.detail_bez1 = detail_bez
+        return list(self.all_services["PLS"][self.detail_bez1].keys())
 
-    @property
-    def bez2(self):
+    def bez2(self, detail_bez):
         return None
 
-    @bez2.setter
-    def bez2(self, detail_bez):
-        self.detail_bez2 = ""
-
-    @property
-    def note(self):
+    def note(self, pose):
+        self.pose = pose
         try:
             if self.all_services["PLS"][self.detail_bez1][self.pose]["bemerkung"] != None:
                 return self.all_services["PLS"][self.detail_bez1][self.pose]["bemerkung"]
@@ -152,82 +210,55 @@ class PLS(AW):
         except KeyError:
             return None
 
-    @note.setter
-    def note(self, pose):
-        self.pose = pose
-
-    @property
-    def service_spec(self):
+    def service_spec(self, spec):
+        self.spec = spec
         if self.detail_bez1 == "" or self.spec == "" or self.spec == "---":
             return None
         all_indexes = list(self.all_services["PLS"][self.detail_bez1][self.spec].keys())
         all_indexes.remove("bemerkung")
         return all_indexes
 
-    @service_spec.setter
-    def service_spec(self, spec):
-        self.spec = spec
-
-    @property
-    def service_price(self):
-        return self.all_services["PLS"][self.detail_bez1][self.spec]["programmierung"]
-
-    @service_price.setter
     def service_price(self, price):
         self.prices = price
+        return self.all_services["PLS"][self.detail_bez1][self.spec]["programmierung"]
 
-    @property
     def table_header(self):
         return list(self.all_header["PLS"].split(','))
 
-    @property
-    def effortprice(self):
+    def effortprice(self, price):
+        self.prices = price
         return float(self.lf["PLS"]["programmierung"])
 
-    @effortprice.setter
-    def effortprice(self, price):
-        self.price = price
 
+class MSR(Area):
 
-class MSR(AW):
+    def name(self):
+        return "MSR"
 
-    @property
     def position(self):
         return list(self.all_services["MSR"].keys())
 
-    @property
-    def bez1(self):
+    def bez1(self, detail_bez):
+        self.detail_bez1 = detail_bez
         bez_text = list(self.all_services["MSR"][self.detail_bez1].keys())
         if (1 in bez_text):
             return list(self.all_services["MSR"][self.detail_bez1][bez_text[0]].keys())
         return bez_text
 
-    @bez1.setter
-    def bez1(self, detail_bez):
-        self.detail_bez1 = detail_bez
-
-    @property
-    def bez2(self):
+    def bez2(self, detail_bez):
+        self.detail_bez2 = detail_bez
         bez_text = list(self.all_services["MSR"][self.detail_bez2].keys())
         if (2 in bez_text):
             return list(self.all_services["MSR"][self.detail_bez2][bez_text[1]].keys())
         else:
             return None
 
-    @bez2.setter
-    def bez2(self, detail_bez):
-        self.detail_bez2 = detail_bez
-
-    @property
-    def note(self):
-        return None
-
-    @note.setter
     def note(self, pose):
         self.pose = pose
+        return None
 
-    @property
-    def service_spec(self):
+    def service_spec(self, spec):
+        self.spec = spec
         if self.detail_bez1 == "" or self.spec == "" or self.spec == "---":
             return None
         elif (self.spec in list(self.all_services["MSR"][self.detail_bez1])):
@@ -239,12 +270,8 @@ class MSR(AW):
         else:
             return None
 
-    @service_spec.setter
-    def service_spec(self, spec):
-        self.spec = spec
-
-    @property
-    def service_price(self):
+    def service_price(self, price):
+        self.price = price
         if (self.spec in list(self.all_services["MSR"][self.detail_bez1])):
             return self.all_services["MSR"][self.detail_bez1][self.spec][self.prices]
         elif (self.spec in list(self.all_services["MSR"][self.detail_bez1][1])):
@@ -254,18 +281,9 @@ class MSR(AW):
         else:
             return None
 
-    @service_price.setter
-    def service_price(self, price):
-        self.prices = price
-
-    @property
     def table_header(self):
         return self.all_header["MSR"].split(',')
 
-    @property
-    def effortprice(self):
-        return float(self.lf["MSR"][self.price])
-
-    @effortprice.setter
     def effortprice(self, price):
         self.price = price
+        return float(self.lf["MSR"][self.price])
