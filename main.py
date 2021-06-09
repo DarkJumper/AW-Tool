@@ -268,7 +268,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
     def get_table_data(self):
         f_colmn = []
         f_row = []
-        for row in range(self.rowCountTable - 2):
+        for row in range(self.rowCountTable - 1):
             for column in range(self.tableWidget.columnCount()):
                 inhalt = self.tableWidget.item(row, column)
                 f_colmn.append(str(inhalt.text()))
@@ -442,7 +442,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
                 [
                     [txt_geber, geber, "", "", "Kiel Engineering GmbH"],
                     [txt_intern, intern, "", "", "Niederlassung Wesseling"],
-                    [txt_extern, extern, "", "", "Kölner Straße 65"], [txt_bearb, bearb, "", "", "50389 Wesseling"]
+                    [txt_extern, extern, "", "", "Kölner Straße 65"], [txt_bearb, bearb, "", "", "50389 Wesseling"], []
                     ],
                 )
             self.create.writeString(0, [self.current_func.table_header])
@@ -450,7 +450,7 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
             self.create.writeString(0, data)
             self.create.get_width(data)
             end_off_data = [["Mehrung von: ", self.faktor, "Gesammtbetrag: %.2f €" % (self.summe)]]
-            self.create.writeString(len(self.current_func.table_header) - 3, end_off_data)
+            self.create.writeString(len(self.current_func.table_header) - 4, end_off_data)
             self.create.get_width(end_off_data)
             self.create.set_width()
             self.create.close()
@@ -463,7 +463,10 @@ class AWApp(QtWidgets.QMainWindow, AW_GUI.Ui_AWTool):
         for key in range(delete, len_lookup):
             self.lookup.update({key: self.lookup[key + 1]})
             last_key = key
-        del self.lookup[last_key + 1]
+        try:
+            del self.lookup[last_key + 1]
+        except UnboundLocalError:
+            self.lookup.popitem()
 
     def new_ids(self):
         for row in range(self.rowCountTable - 2):
