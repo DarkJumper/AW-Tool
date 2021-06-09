@@ -1,7 +1,7 @@
-from PySide6 import QtWidgets
+from PyQt5 import QtWidgets
 
 from moduls.ClearingRate import AW, MSR, ET, PLS
-from windows.RezeptWidget import Ui_Rezept
+from windows.RezeptWidget_qt5 import Ui_Rezept
 from model.TableModel import TableModel
 
 

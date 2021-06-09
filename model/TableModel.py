@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem
 
 
 class TableModel:

@@ -1,11 +1,11 @@
 import sys
 
 from datetime import date
-from PySide6 import QtWidgets
+from PyQt5 import QtWidgets
 
 from model.TableModel import TableModel
 from RezeptView import RezeptWindow
-from windows.MainWindow import Ui_AWTool
+from windows.MainWindow_qt5 import Ui_AWTool
 from moduls.ClearingRate import AW
 from moduls.CreateCsv import CreateExcel
 
@@ -24,8 +24,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_AWTool):
         self.label_faktor.setText("0.0")
         self.label_sum.setText("0.00")
         self.label_version.setText(self.__version)
-        self.pushButton_hinzufgen.clicked.connect(self.push_hinzufügen)
-        self.pushButton_loeschen.clicked.connect(self.push_löschen)
+        self.pushButton_hinzufgen.clicked.connect(self.push_hinzufuegen)
+        self.pushButton_loeschen.clicked.connect(self.push_loeschen)
         self.pushButton_erstellen.clicked.connect(self.push_erstellen)
         self.pushButton_beenden.clicked.connect(self.push_beenden)
         self.tableWidget.itemChanged.connect(self.changed_table_data)
@@ -58,10 +58,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_AWTool):
             self.label_faktor.setText(str(self.aw.increase))
             self.label_sum.setText("%.2f" % (self.aw.increase * price))
 
-    def push_hinzufügen(self, checked):
+    def push_hinzufuegen(self, checked):
         self.rezept_window.show()
 
-    def push_löschen(self, checked):
+    def push_loeschen(self, checked):
         self.model.delete_row()
         col = self.model.last_colmn()
         men, price = self.model.sum_last_row(col - 1)
