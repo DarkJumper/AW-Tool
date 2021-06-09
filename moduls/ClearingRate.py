@@ -12,10 +12,12 @@ class AW:
         self.result_price = str()
         self.result_bez1 = list()
         self.result_bez2 = list()
+        self.set_increace = int()
+        self.result_effort = float()
         file = 'Verrechnung.yaml'
         with open(file, 'r') as f:
             self.data = yaml.load(f)
-            self._area = Area(self.data)
+            self._area = strategy(self.data)
 
     def __call__(self):
         print("test")
@@ -85,11 +87,36 @@ class AW:
         self.result_price = self._area.service_price(price)
 
     @property
+    def effortprice(self):
+        return self.result_effort
+
+    @effortprice.setter
+    def effortprice(self, price):
+        self.result_effort = self._area.effortprice(price)
+
+    @property
     def table_header(self):
         return self._area.table_header()
 
+    @property
+    def increase(self):
+        all_faktors = self._area.increase()
+        kleinste = list(all_faktors)[0]
+        if self.set_increace < kleinste:
+            faktor = all_faktors[int(kleinste)]["faktor"]
+            return faktor
+        else:
+            for faktor in reversed(all_faktors):
+                if self.set_increace >= int(faktor):
+                    faktor = all_faktors[int(faktor)]["faktor"]
+                    return faktor
 
-class Area:
+    @increase.setter
+    def increase(self, inc):
+        self.set_increace = inc
+
+
+class strategy:
 
     def __init__(self, data):
         self.prices = str()
@@ -141,7 +168,7 @@ class Area:
         pass
 
 
-class ET(Area):
+class ET(strategy):
 
     def name(self):
         return "ET"
@@ -175,17 +202,17 @@ class ET(Area):
 
     def service_price(self, price):
         self.price = price
-        return self.all_services["ET"][self.spec][self.prices]
+        return self.all_services["ET"][self.spec][self.price]
 
     def table_header(self):
         return list(self.all_header["ET"].split(','))
 
     def effortprice(self, price):
-        self.price = price
-        return float(self.lf["ET"][self.price])
+        self.prices = price
+        return float(self.lf["ET"][self.prices])
 
 
-class PLS(Area):
+class PLS(strategy):
 
     def name(self):
         return "PLS"
@@ -219,7 +246,7 @@ class PLS(Area):
         return all_indexes
 
     def service_price(self, price):
-        self.prices = price
+        self.price = price
         return self.all_services["PLS"][self.detail_bez1][self.spec]["programmierung"]
 
     def table_header(self):
@@ -230,7 +257,7 @@ class PLS(Area):
         return float(self.lf["PLS"]["programmierung"])
 
 
-class MSR(Area):
+class MSR(strategy):
 
     def name(self):
         return "MSR"
@@ -285,5 +312,5 @@ class MSR(Area):
         return self.all_header["MSR"].split(',')
 
     def effortprice(self, price):
-        self.price = price
-        return float(self.lf["MSR"][self.price])
+        self.prices = price
+        return float(self.lf["MSR"][self.prices])
