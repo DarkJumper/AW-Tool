@@ -2,14 +2,14 @@ import xlsxwriter
 import datetime
 
 
-class createExcel:
+class CreateExcel:
 
-    def __init__(self, Name) -> None:
+    def __init__(self, folder, Name) -> None:
         self.current_row = 0
         self.last_colmn = 0
         self.maxlen = []
         # Create an new Excel file and new Excel Worksheet
-        self.workbook = xlsxwriter.Workbook(Name + '.xlsx', {'constant_memory': True})
+        self.workbook = xlsxwriter.Workbook(folder + "/" + Name + '.xlsx', {'constant_memory': True})
         self.worksheet = self.workbook.add_worksheet(Name)
 
     # Einfügen eines Bilds
@@ -26,7 +26,6 @@ class createExcel:
         for row in data:
             if self.maxlen == []:
                 for element in row:
-                    print(element)
                     self.maxlen.append(len(str(element)))
             else:
                 for element in range(len(row)):
