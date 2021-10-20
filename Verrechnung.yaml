@@ -2,14 +2,14 @@ Leistungen:
   MSR:
     vor Ort:
       FI:
-        basic: 1.7
+        "basic / 12.01" : 1.7
         detail: 0
         montage: 0.1
         material: 0.5
         PLS: None
         konv: None
       LI:
-        basic: 2.7
+        "basic / 12.01": 2.7
         detail: 0
         montage: 0.1
         material: 0.8
@@ -383,7 +383,7 @@ Leistungen:
         programmierung: 0.2
 LeistungsFaktor:
   MSR:
-    basic: 30.00
+    "basic / 12.01": 30.00
     material: 40.00
     detail: 50.00
     montage: 60.00

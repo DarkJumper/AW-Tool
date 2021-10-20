@@ -88,9 +88,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_AWTool):
             self.create.writeString(
                 1,
                 [
-                    [txt_geber, geber, "", "", "Kiel Engineering GmbH"],
-                    [txt_intern, intern, "", "", "Niederlassung Wesseling"],
-                    [txt_extern, extern, "", "", "Lessingstraße 15"], [txt_bearb, bearb, "", "", "46149 Oberhausen"]
+                    [txt_geber, geber, "", "", "ECM Ingenieur-Unternehmen GmbH"],
+                    [txt_intern, intern, "", "", "Abt. KIENK"], [txt_extern, extern, "", "", "Lessingstraße 15"],
+                    [txt_bearb, bearb, "", "", "46149 Oberhausen"]
                     ],
                 )
             header = self.model.get_header()
