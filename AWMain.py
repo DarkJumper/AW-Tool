@@ -1,13 +1,13 @@
 import sys
-
 from datetime import date
+
 from PyQt5 import QtWidgets
 
 from model.TableModel import TableModel
-from RezeptView import RezeptWindow
-from windows.MainWindow_qt5 import Ui_AWTool
 from moduls.ClearingRate import AW
 from moduls.CreateCsv import CreateExcel
+from RezeptView import RezeptWindow
+from windows.MainWindow_qt5 import Ui_AWTool
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_AWTool):
@@ -52,11 +52,76 @@ class MainWindow(QtWidgets.QMainWindow, Ui_AWTool):
             base_price = float(self.tableWidget.item(row, col - 2).text())
             prozent = float(self.tableWidget.item(row, col).text()) / 100.0
             price = faktor * base_price * prozent
+            price = round(price, 2)
             self.model.setItemLastColumn(row, price)
             men, price = self.model.sum_last_row(col)
             self.aw.increase = men
             self.label_faktor.setText(str(self.aw.increase))
             self.label_sum.setText("%.2f" % (self.aw.increase * price))
+        if col == self.tableWidget.columnCount() - 9:
+            if self.tableWidget.item(row, col).text().upper() == "X":
+                leistung = str(self.tableWidget.item(row, col + 4).text())
+                faktor = float(self.tableWidget.item(row, col + 6).text())
+                base_price = float(self.tableWidget.item(row, col + 5).text())
+                zusatz_faktor = self.aw.weitere_position("Trennung", leistung)
+                result = faktor + float(zusatz_faktor)
+                prozent = float(self.tableWidget.item(row, col + 7).text()) / 100.0
+                price = result * base_price * prozent
+                price = round(price, 2)
+                self.model.setItemLastColumn(row, price)
+                self.model.setItemFaktorColumn(row, str(result))
+                men, price = self.model.sum_last_row(col)
+                self.aw.increase = men
+                self.label_faktor.setText(str(self.aw.increase))
+                self.label_sum.setText("%.2f" % (self.aw.increase * price))
+        if col == self.tableWidget.columnCount() - 8:
+            if self.tableWidget.item(row, col).text().upper() == "X":
+                leistung = str(self.tableWidget.item(row, col + 3).text())
+                faktor = float(self.tableWidget.item(row, col + 5).text())
+                base_price = float(self.tableWidget.item(row, col + 4).text())
+                zusatz_faktor = self.aw.weitere_position("Hilfsenergie", leistung)
+                result = faktor + float(zusatz_faktor)
+                prozent = float(self.tableWidget.item(row, col + 6).text()) / 100.0
+                price = result * base_price * prozent
+                price = round(price, 2)
+                self.model.setItemLastColumn(row, price)
+                self.model.setItemFaktorColumn(row, str(result))
+                men, price = self.model.sum_last_row(col)
+                self.aw.increase = men
+                self.label_faktor.setText(str(self.aw.increase))
+                self.label_sum.setText("%.2f" % (self.aw.increase * price))
+        if col == self.tableWidget.columnCount() - 7:
+            if self.tableWidget.item(row, col).text().upper() == "X":
+                leistung = str(self.tableWidget.item(row, col + 2).text())
+                faktor = float(self.tableWidget.item(row, col + 4).text())
+                base_price = float(self.tableWidget.item(row, col + 3).text())
+                zusatz_faktor = self.aw.weitere_position("Klemmpare", leistung)
+                result = faktor + float(zusatz_faktor)
+                prozent = float(self.tableWidget.item(row, col + 5).text()) / 100.0
+                price = result * base_price * prozent
+                price = round(price, 2)
+                self.model.setItemLastColumn(row, price)
+                self.model.setItemFaktorColumn(row, str(result))
+                men, price = self.model.sum_last_row(col)
+                self.aw.increase = men
+                self.label_faktor.setText(str(self.aw.increase))
+                self.label_sum.setText("%.2f" % (self.aw.increase * price))
+        if col == self.tableWidget.columnCount() - 6:
+            if self.tableWidget.item(row, col).text().upper() == "X":
+                leistung = str(self.tableWidget.item(row, col + 1).text())
+                faktor = float(self.tableWidget.item(row, col + 3).text())
+                base_price = float(self.tableWidget.item(row, col + 2).text())
+                zusatz_faktor = self.aw.weitere_position("Konfigurationsliste", leistung)
+                result = faktor + float(zusatz_faktor)
+                prozent = float(self.tableWidget.item(row, col + 4).text()) / 100.0
+                price = result * base_price * prozent
+                price = round(price, 2)
+                self.model.setItemLastColumn(row, price)
+                self.model.setItemFaktorColumn(row, str(result))
+                men, price = self.model.sum_last_row(col)
+                self.aw.increase = men
+                self.label_faktor.setText(str(self.aw.increase))
+                self.label_sum.setText("%.2f" % (self.aw.increase * price))
 
     def push_hinzufuegen(self, checked):
         self.rezept_window.show()

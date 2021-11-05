@@ -46,6 +46,12 @@ class AW:
     def position(self):
         return self._area.position()
 
+    def weitere_position(self, key, leistung):
+        print("HIER2")
+        print(self._area)
+        print(self._area.weitere_pos(key, leistung))
+        return self._area.weitere_pos(key, leistung)
+
     @property
     def bez1(self):
         return self.result_bez1
@@ -142,6 +148,9 @@ class strategy:
     @abstractmethod
     def position(self):
         pass
+
+    def weitere_pos(self, key, leistung):
+        return float(self.all_services["MSR"]["weitere"][key][leistung])
 
     @abstractmethod
     def bez1(self, detail_bez):
@@ -263,7 +272,9 @@ class MSR(strategy):
         return "MSR"
 
     def position(self):
-        return list(self.all_services["MSR"].keys())
+        keys = list(self.all_services["MSR"].keys())
+        keys.remove("weitere")
+        return keys
 
     def bez1(self, detail_bez):
         self.detail_bez1 = detail_bez

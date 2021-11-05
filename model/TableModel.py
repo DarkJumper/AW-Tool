@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5 import QtCore
 
 
 class TableModel:
@@ -46,8 +47,12 @@ class TableModel:
         return f_row
 
     def delete_row(self):
-        indexes = self.table.selectionModel().selectedRows()
-        for index in sorted(indexes):
+        index_list = []
+        for model_index in self.table.selectionModel().selectedRows():
+            index = QtCore.QPersistentModelIndex(model_index)
+            index_list.append(index)
+
+        for index in index_list:
             self.table.removeRow(index.row())
 
     def last_row(self):
@@ -58,4 +63,8 @@ class TableModel:
 
     def setItemLastColumn(self, row, item):
         colmn = self.table.columnCount() - 1
+        self.table.setItem(row, colmn, QTableWidgetItem(str(item)))
+
+    def setItemFaktorColumn(self, row, item):
+        colmn = self.table.columnCount() - 3
         self.table.setItem(row, colmn, QTableWidgetItem(str(item)))

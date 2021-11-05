@@ -42,7 +42,7 @@ class RezeptWindow(QtWidgets.QWidget, Ui_Rezept):
             self.cb_bez2_vis("Bezeichnung 2")
             self.textBrowser_information.setText("")
             self.cb_leistung_vis()
-            self.model.header()
+            self.model.header([])
         elif text == self._bereiche[0]:
             self.rezept_data.area = MSR
             self.cb_position_vis(*self.rezept_data.position)
@@ -110,45 +110,64 @@ class RezeptWindow(QtWidgets.QWidget, Ui_Rezept):
         self.comboBox_leistung.setCurrentIndex(0)
 
     def apply_service(self, clicked):
-        bem = self.lineEdit_Bemerkung.displayText()
-        ber = self.comboBox_bereich.currentText()
-        pos = self.comboBox_position.currentText()
-        bez1 = self.comboBox_bezeichnung1.currentText()
-        bez2 = self.comboBox_bezeichnung2.currentText()
-        leist = self.comboBox_leistung.currentText()
-        if isinstance(self.rezept_data.area, ET):
-            self.rezept_data.service_price = leist
-            self.rezept_data.effortprice = leist
-            fak = self.rezept_data.service_price
-            wert = self.rezept_data.effortprice
-        if isinstance(self.rezept_data.area, PLS):
-            self.rezept_data.effortprice = leist
-            self.rezept_data.service_price = "programmierung"
-            fak = self.rezept_data.service_price
-            wert = self.rezept_data.effortprice
-        if isinstance(self.rezept_data.area, MSR):
-            self.rezept_data.effortprice = leist
-            fak1 = 0.0
-            if bez1 != self._dashes:
-                self.rezept_data.bez1 = pos
-                self.rezept_data.service_spec = bez1
+        try:
+            self.comboBox_position.setStyleSheet("QComboBox" "{" "}")
+            self.comboBox_bereich.setStyleSheet("QComboBox" "{" "}")
+            self.comboBox_bezeichnung1.setStyleSheet("QComboBox" "{" "}")
+            self.comboBox_leistung.setStyleSheet("QComboBox" "{" "}")
+            bem = self.lineEdit_Bemerkung.displayText()
+            ber = self.comboBox_bereich.currentText()
+            pos = self.comboBox_position.currentText()
+            bez1 = self.comboBox_bezeichnung1.currentText()
+            bez2 = self.comboBox_bezeichnung2.currentText()
+            leist = self.comboBox_leistung.currentText()
+            if isinstance(self.rezept_data.area, ET):
                 self.rezept_data.service_price = leist
-                fak1 = float(self.rezept_data.service_price)
-            fak2 = 0.0
-            if bez2 != self._dashes:
-                self.rezept_data.bez2 = pos
-                self.rezept_data.service_spec = bez2
-                self.rezept_data.service_price = leist
-                fak2 = float(self.rezept_data.service_price)
-            wert = self.rezept_data.effortprice
-            if fak1 is None or fak2 is None:
-                fak = None
-            fak = fak1 + fak2
-        if fak is None or wert is None or isinstance(fak, str):
-            komi = "Leistung nicht vorhanden!"
-            self.show_popup_info(komi)
-            return None
-        self.model.data([bem, ber, pos, bez1, bez2, leist, str(wert), str(fak), str(100.0), "%.2f " % (fak*wert)])
+                self.rezept_data.effortprice = leist
+                fak = self.rezept_data.service_price
+                wert = self.rezept_data.effortprice
+            if isinstance(self.rezept_data.area, PLS):
+                self.rezept_data.effortprice = leist
+                self.rezept_data.service_price = "programmierung"
+                fak = self.rezept_data.service_price
+                wert = self.rezept_data.effortprice
+            if isinstance(self.rezept_data.area, MSR):
+                self.rezept_data.effortprice = leist
+                fak1 = 0.0
+                if bez1 != self._dashes:
+                    self.rezept_data.bez1 = pos
+                    self.rezept_data.service_spec = bez1
+                    self.rezept_data.service_price = leist
+                    fak1 = float(self.rezept_data.service_price)
+                fak2 = 0.0
+                if bez2 != self._dashes:
+                    self.rezept_data.bez2 = pos
+                    self.rezept_data.service_spec = bez2
+                    self.rezept_data.service_price = leist
+                    fak2 = float(self.rezept_data.service_price)
+                wert = self.rezept_data.effortprice
+                if fak1 is None or fak2 is None:
+                    fak = None
+                fak = fak1 + fak2
+            if fak is None or wert is None or isinstance(fak, str):
+                komi = "Leistung nicht vorhanden!"
+                self.show_popup_info(komi)
+                return None
+            self.model.data(
+                [
+                    bem, ber, pos, bez1, bez2, "", "", "", "", leist,
+                    str(wert),
+                    str(fak),
+                    str(100.0),
+                    "%.2f " % (fak*wert)
+                    ]
+                )
+        except KeyError:
+            self.comboBox_position.setStyleSheet("QComboBox" "{" "background-color: red;" "}")
+            self.comboBox_bereich.setStyleSheet("QComboBox" "{" "background-color: red;" "}")
+            self.comboBox_bezeichnung1.setStyleSheet("QComboBox" "{" "background-color: red;" "}")
+            self.comboBox_leistung.setStyleSheet("QComboBox" "{" "background-color: red;" "}")
+            pass
 
     def push_beenden(self, checked):
         self.hide()
